@@ -33,19 +33,6 @@
                 android:textSize="20sp"
                 android:gravity="center"/>
 
-            <com.zcw.togglebutton.ToggleButton
-                android:id="@+id/tg"
-                android:layout_width="54dp"
-                android:layout_gravity="center"
-                toggle:tbOnColor="#2fea3f"
-                toggle:tbOffColor="#ce0e0e"
-                toggle:tbSpotColor="#d0ebf4"
-                android:textOn="Play"
-                android:textOff="Stop"
-                toggle:tbOffBorderColor="#d40d28"
-                toggle:tbBorderWidth="2dp"
-                android:layout_height="30dp" >
-            </com.zcw.togglebutton.ToggleButton>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
