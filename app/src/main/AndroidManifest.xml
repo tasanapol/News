@@ -10,7 +10,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".NewsMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,10 +21,12 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".PostActivity"
+        <activity
+            android:name=".PostActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/><!-- ซ่อนคีย์บอร์ด -->
-        <activity android:name=".SingleActivity"></activity>
+            android:windowSoftInputMode="stateHidden|adjustResize" /> <!-- ซ่อนคีย์บอร์ด -->
+        <activity android:name=".SingleActivity" />
+        <activity android:name=".RadioActivity"></activity>
     </application>
 
 </manifest>
