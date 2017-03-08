@@ -42,6 +42,7 @@ dependencies {
     compile 'info.hoang8f:fbutton:1.0.5'
     compile 'com.github.bloder:magic:1.1'
     compile 'com.github.markushi:circlebutton:1.1'
+    compile 'com.adammcneilly:actioncardview:1.0.1'
 
 
 
