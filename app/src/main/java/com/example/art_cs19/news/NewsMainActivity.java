@@ -158,8 +158,6 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add) {
             startActivity(new Intent(NewsMainActivity.this, PostActivity.class));
-
-
         }
 
         return super.onOptionsItemSelected(item);

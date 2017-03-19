@@ -3,6 +3,7 @@
     package="com.example.art_cs19.news">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 
     <application
         android:allowBackup="true"
@@ -31,6 +32,7 @@
         <activity android:name=".RadioActivity" />
         <activity android:name=".RadioSingleActivity"></activity>
         <activity android:name=".NewsMainActivity"></activity>
+        <service  android:enabled="true" android:name="RadioService"/>
     </application>
 
 </manifest>

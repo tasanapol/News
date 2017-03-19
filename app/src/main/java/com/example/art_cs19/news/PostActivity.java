@@ -126,7 +126,7 @@ public class PostActivity extends AppCompatActivity {
             filepath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Uri dowloadUri = taskSnapshot.getDownloadUrl();
+                    @SuppressWarnings("VisibleForTests") Uri dowloadUri = taskSnapshot.getDownloadUrl();
                     DatabaseReference newPost = fDatabase.push();
                     newPost.child("title").setValue(title_val);
                     newPost.child("description").setValue(description_val);

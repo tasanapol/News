@@ -37,6 +37,7 @@ public class RadioActivity extends AppCompatActivity {
                 Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
                 intent.putExtra("myFm", cool);
                 intent.putExtra("imageRadio" ,R.drawable.cool93);
+                intent.putExtra("nameRadio", "Cool93");
                 startActivity(intent);
 
             }
