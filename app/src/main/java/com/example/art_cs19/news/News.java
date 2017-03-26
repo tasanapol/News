@@ -49,6 +49,7 @@ public class News {
     public void setTitle(String title) {
         this.title = title;
     }
+
     public String getDate() {
         return date;
     }
@@ -63,6 +64,7 @@ public class News {
 
     public void setTime(String time) {
         this.time = time;
+
     }
     public String getId() {
         return id;

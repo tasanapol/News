@@ -3,10 +3,7 @@
 buildscript {
     repositories {
         jcenter()
-        maven {
-            url 'https://dl.bintray.com/spark/maven'
-
-        }
+        maven { url 'https://dl.bintray.com/spark/maven' }
 
         mavenCentral()
         mavenLocal()
@@ -24,6 +21,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven { url 'https://jitpack.io' }
     }
 }
 

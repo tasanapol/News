@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -15,11 +16,9 @@
         <activity android:name=".ChoosedActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         //ครอปภาพ
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
@@ -30,9 +29,33 @@
             android:windowSoftInputMode="stateHidden|adjustResize" /> <!-- ซ่อนคีย์บอร์ด -->
         <activity android:name=".SingleActivity" />
         <activity android:name=".RadioActivity" />
-        <activity android:name=".RadioSingleActivity"></activity>
-        <activity android:name=".NewsMainActivity"></activity>
-        <service  android:enabled="true" android:name="RadioService"/>
+        <activity android:name=".RadioSingleActivity" />
+        <activity android:name=".NewsMainActivity" />
+        <activity android:name=".MainActivity" />
+
+        <service
+            android:name=".RadioService"
+            android:enabled="true" />
+        <service
+            android:name=".SongService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver android:name=".NotificationBroadcast">
+            <intent-filter>
+                <action android:name="com.tutorialsface.audioplayer.delete" />
+                <action android:name="com.tutorialsface.audioplayer.pause" />
+                <action android:name="com.tutorialsface.audioplayer.next" />
+                <action android:name="com.tutorialsface.audioplayer.play" />
+                <action android:name="com.tutorialsface.audioplayer.previous" />
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".AudioBookMainActivity" />
+        <activity android:name=".PostAudioBookActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" /> <!-- ซ่อนคีย์บอร์ด -->
+
     </application>
 
 </manifest>

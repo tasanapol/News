@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class PlayerConstants {
 	//List of Songs
-	/*public static ArrayList<MediaItem> SONGS_LIST = new ArrayList<MediaItem>();*/
+	public static ArrayList<MediaItem> SONGS_LIST = new ArrayList<MediaItem>();
 	//song number which is playing right now from SONGS_LIST
 	public static int SONG_NUMBER = 0;
 	//song is playing or paused

@@ -55,8 +55,7 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
     protected void onStart() {
         super.onStart();
         final FirebaseRecyclerAdapter<News, NewsViewHolder>
-                firebaseRecyclerAdapter = new FirebaseRecyclerAdapter
-                <News, NewsViewHolder>
+                firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<News, NewsViewHolder>
                 (News.class, R.layout.news_row, NewsViewHolder.class, fDatabase) {
 
 
@@ -270,7 +269,6 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
             tts.setLanguage(new Locale("th"));
-            tts.setSpeechRate((float) 0.8);
         }
 
     }

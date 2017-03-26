@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fbutton="http://schemas.android.com/apk/res-auto"
+    xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fbutton_color_midnight__dark_blue"
+    android:orientation="vertical"
+    tools:context="com.example.art_cs19.news.PostAudioBookActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvPostId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/imgAudioPic"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:background="#333"
+                android:scaleType="fitXY"
+                android:src="@drawable/add_btn" />
+
+
+            <com.github.florent37.materialtextfield.MaterialTextField
+                android:id="@+id/groupAudioName"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imgUpload"
+                android:layout_marginLeft="20dp"
+                app:mtf_image="@drawable/ic_loyalty_black_24dp">
+
+                <EditText
+                    android:id="@+id/edtAudioName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="ชื่อหนังสือ"
+                    android:textColor="#333"
+                    android:textColorHint="#000000"
+                    android:textSize="15sp" />
+
+            </com.github.florent37.materialtextfield.MaterialTextField>
+
+
+            <com.github.florent37.materialtextfield.MaterialTextField
+                android:id="@+id/groupUploader"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                app:mtf_image="@drawable/ic_description_black_24dp">
+
+                <EditText
+                    android:id="@+id/edtUploader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="ชื่อผู้อัพโหลด"
+                    android:textColor="#333"
+                    android:textColorHint="#000000"
+                    android:textSize="15sp" />
+            </com.github.florent37.materialtextfield.MaterialTextField>
+
+            <com.github.florent37.materialtextfield.MaterialTextField
+                android:id="@+id/groupDate"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                app:mtf_image="@drawable/ic_date_range_black_24dp">
+
+                <EditText
+                    android:id="@+id/edtDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/edtDescription"
+                    android:enabled="false"
+                    android:hint="กรอกวันที่"
+                    android:textColor="#333"
+                    android:textColorHint="#000000"
+                    android:textSize="15sp" />
+            </com.github.florent37.materialtextfield.MaterialTextField>
+
+
+            <com.github.florent37.materialtextfield.MaterialTextField
+                android:id="@+id/groupTime"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                app:mtf_image="@drawable/ic_access_time_black_24dp">
+
+                <EditText
+                    android:id="@+id/edtTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/edtDescription"
+                    android:enabled="false"
+                    android:hint="กรอกเวลา"
+                    android:textColor="#333"
+                    android:textColorHint="#000000"
+                    android:textSize="15sp" />
+            </com.github.florent37.materialtextfield.MaterialTextField>
+
+
+            <com.github.florent37.materialtextfield.MaterialTextField
+                android:id="@+id/groupNarrator"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                app:mtf_image="@drawable/ic_access_time_black_24dp">
+
+                <EditText
+                    android:id="@+id/edtNarrator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/edtDescription"
+                    android:enabled="false"
+                    android:hint="ชื่อผู้บรรยาย"
+                    android:textColor="#333"
+                    android:textColorHint="#000000"
+                    android:textSize="15sp" />
+            </com.github.florent37.materialtextfield.MaterialTextField>
+
+            ////////////////////////////////////////////////////////
+
+            <com.victor.loading.rotate.RotateLoading
+                android:id="@+id/rotateloading"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                app:loading_color="#ffffff"
+                app:loading_width="5dp" />
+
+            <Button
+                android:id="@+id/btnRecord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:paddingTop="25dp"
+                android:background="@drawable/round_shape"
+                android:drawableTop="@drawable/ic_action_play"
+                android:textColor="#FFFFFF" />
+
+
+            //////////////////////////////////////////////////////////////////////
+
+            <info.hoang8f.widget.FButton
+                android:id="@+id/btnSubmit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:text="Upload"
+                android:textColor="@color/fbutton_color_clouds"
+                android:textStyle="bold"
+                fbutton:buttonColor="@color/fbutton_color_emerald"
+                fbutton:cornerRadius="5dp"
+                fbutton:shadowColor="@color/fbutton_color_nephritis"
+                fbutton:shadowEnabled="true"
+                fbutton:shadowHeight="5dp" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -84,6 +84,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:text="Get 102.5"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp" />
         </LinearLayout>

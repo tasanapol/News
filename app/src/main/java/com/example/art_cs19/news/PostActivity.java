@@ -37,7 +37,7 @@ public class PostActivity extends AppCompatActivity {
     private EditText edtTitle, edtDescription, edtDate, edtTime;
     private FButton btnSubmit;
     private Uri selectedimg = null;
-    private Uri resultUri ;
+    private Uri resultUri;
     private StorageReference fStorage;
     private DatabaseReference fDatabase;
     private ProgressDialog progressbar;
@@ -56,14 +56,10 @@ public class PostActivity extends AppCompatActivity {
     private static final int GALLERY_REQUEST = 1;
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
-
 
 
         imgUpload = (ImageButton) findViewById(R.id.imgUpload);
@@ -194,6 +190,7 @@ public class PostActivity extends AppCompatActivity {
             }
         }
     }
+
     public void DateCalender() {
         //เวลา
         DateFormat df = new SimpleDateFormat("HH:mm"); //format time

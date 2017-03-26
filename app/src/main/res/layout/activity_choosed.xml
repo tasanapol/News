@@ -45,7 +45,7 @@
                     android:scaleType="fitXY"
                     android:layout_marginLeft="20dp"
                     android:src="@drawable/audiobook"
-                    android:id="@+id/imageView2" />
+                    android:id="@+id/audioBook" />
             </LinearLayout>
 
             <LinearLayout
