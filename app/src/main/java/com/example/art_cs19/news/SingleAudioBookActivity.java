@@ -119,7 +119,4 @@ public class SingleAudioBookActivity extends AppCompatActivity {
     }
 
 
-
-
-
 }
