@@ -115,10 +115,12 @@ public class PostActivity extends AppCompatActivity {
         final String id_val = tvPostId.getText().toString().trim();
 
 
-        if (!title_val.toString().trim().equals("") && !description_val.toString().trim().equals("") && resultUri != null && !date_val.toString().trim().equals("")) {
-            StorageReference filepath = fStorage
-                    .child("News_Images")
-                    .child(resultUri.getLastPathSegment());
+        if (!title_val.toString().trim().equals("")
+                && !description_val.toString().trim().equals("")
+                && resultUri != null
+                && !date_val.toString().trim().equals("")) {
+            StorageReference filepath = fStorage.child("News_Images").child(resultUri.getLastPathSegment());
+
             filepath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

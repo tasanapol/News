@@ -7,7 +7,8 @@
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
     android:layout_marginTop="10dp"
-    app:cardCornerRadius="10dp">
+    app:cardCornerRadius="4dp"
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,14 +27,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="5dp">
 
             <TextView
                 android:id="@+id/tvNameBook"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:gravity="right"
+                android:gravity="left"
                 android:text="ชื่อหนังสือ"
                 android:textStyle="bold" />
 
@@ -43,15 +45,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
-                android:gravity="right"
-                android:text="ชื่อผู้อัพโหลด"
+                android:gravity="left"
+                android:text="ชื่อผู้แต่ง"
                 android:textStyle="italic" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="right"
+                android:gravity="left"
                 android:layout_marginTop="10dp">
 
                 <TextView
@@ -60,7 +62,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:text="วันเดือนปี"
-                    android:textSize="8dp" />
+                    android:textSize="8dp"
+                    android:layout_marginRight="20dp"/>
 
                 <TextView
                     android:id="@+id/tvTime"
@@ -68,7 +71,15 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:text="เวลา"
-                    android:textSize="8dp" />
+                    android:textSize="8dp"
+                    android:layout_marginRight="20dp"/>
+
+                <TextView
+                    android:id="@+id/tvId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="10dp"
+                    android:text="xxx"/>
 
             </LinearLayout>
 
@@ -80,27 +91,26 @@
 
             <Button
                 android:id="@+id/btnPlay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="25dp"
                 android:layout_gravity="right"
-                android:layout_margin="10dp"
-                android:background="#ffffff"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/round_shape"
                 android:text="Play"
-                android:textColor="#f18939"
-                android:textStyle="italic|bold" />
+                android:textColor="#ffffff"
+                android:textStyle="italic|bold"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true" />
             <TextView
+                android:layout_marginTop="20dp"
                 android:id="@+id/tvAudio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="รหัส"
                 android:textSize="10dp"/>
 
-            <TextView
-                android:id="@+id/tvId"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="xxx"
-                android:textSize="10dp"/>
+
         </LinearLayout>
 
     </LinearLayout>

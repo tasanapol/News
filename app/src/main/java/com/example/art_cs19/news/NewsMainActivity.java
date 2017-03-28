@@ -1,15 +1,19 @@
 package com.example.art_cs19.news;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,8 +34,13 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
     private Query fDatabase;
     private final int REQUEST_SPEECH = 100;
     private TextToSpeech tts;
+    private ProgressDialog progressbar;
     private String SoundList1, SoundList2, SoundList3, SoundList4, SoundList5, SoundList6, SoundList7, SoundList8, SoundList9, SoundList10;
     private String PageList1, PageList2, PageList3, PageList4, PageList5, PageList6, PageList7, PageList8, PageList9, PageList10;
+
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
 
     @Override
@@ -40,13 +49,19 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
         setContentView(R.layout.activity_news_main);
 
         tts = new TextToSpeech(this, this, "com.google.android.tts");
-
-
+        progressbar = new ProgressDialog(this);
+        progressbar.setMessage("กำลังโหลด");
+        progressbar.show();
         fDatabase = FirebaseDatabase.getInstance().getReference().child("News").orderByChild("id").limitToFirst(10);//ชื่อตารางในfirebase ไม่ใช่ชื่อโครงการนะอาท
         fNewsList = (RecyclerView) findViewById(R.id.recyclerNews);
         fNewsList.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         fNewsList.setLayoutManager(layoutManager);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
 
     }
 
@@ -100,6 +115,7 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
                         startActivity(singleintent);
                     }
                 });
+                progressbar.dismiss();
 
             }
         };
@@ -156,7 +172,7 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add) {
-            startActivity(new Intent(NewsMainActivity.this, PostActivity.class));
+            startActivity(new Intent(this, PostAudioBookActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

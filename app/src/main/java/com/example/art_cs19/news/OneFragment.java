@@ -1,5 +1,6 @@
 package com.example.art_cs19.news;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -29,6 +30,7 @@ public class OneFragment extends Fragment{
     private Query fDatabase;
     LinearLayoutManager layoutManager;
     private View view;
+    private ProgressDialog progressbar;
 
 
     public OneFragment() {
@@ -36,8 +38,11 @@ public class OneFragment extends Fragment{
     }
 
 
-    public void onCreate(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        progressbar = new ProgressDialog(getActivity());
+        progressbar.setMessage("กำลังโหลด");
+        progressbar.show();
 
     }
 
@@ -48,7 +53,7 @@ public class OneFragment extends Fragment{
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_one, container, false);
         recyclerAudio1 = (RecyclerView) view.findViewById(R.id.recyclerAudio1);
-        fDatabase = FirebaseDatabase.getInstance().getReference().child("Audio");
+        fDatabase = FirebaseDatabase.getInstance().getReference().child("Audio").orderByChild("id");
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerAudio1.setHasFixedSize(true);
         recyclerAudio1.setLayoutManager(layoutManager);
@@ -63,18 +68,33 @@ public class OneFragment extends Fragment{
                 (AudioAdapter.class, R.layout.cardview_audiobook, OneFragment.AudioViewHolder.class, fDatabase) {
 
             @Override
-            protected void populateViewHolder(OneFragment.AudioViewHolder viewHolder, AudioAdapter model, int position) {
+            protected void populateViewHolder(OneFragment.AudioViewHolder viewHolder, final AudioAdapter model, int position) {
                 final String post_key = getRef(position).getKey();
                 viewHolder.setTitle(model.getTitle());
                 viewHolder.setAudio(model.getAudio());
                 viewHolder.setDate(model.getDate());
                 viewHolder.setTime(model.getTime());
-                viewHolder.setUploader(model.getUploader());
+                viewHolder.setNarrator(model.getNarrator());
                 viewHolder.setId(model.getId());
                 viewHolder.setImage(getActivity(), model.getImage());
+
+
+                //ส่งค่า putextras post_key ไปหน้า SingleActivity
+                viewHolder.fView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent singleintent = new Intent(getActivity(), SingleAudioBookActivity.class);
+                        singleintent.putExtra("post_key", post_key);
+                        singleintent.putExtra("audio" , model.getAudio());
+                        startActivity(singleintent);
+                    }
+                });
+
+                progressbar.dismiss();
             }
         };
         recyclerAudio1.setAdapter(firebaseRecyclerAdapter);
+
 
     }
     public static class AudioViewHolder extends RecyclerView.ViewHolder {
@@ -107,9 +127,9 @@ public class OneFragment extends Fragment{
         }
 
 
-        public void setUploader(String uploader) {
+        public void setNarrator(String narrator) {
             TextView tvUploader = (TextView) fView.findViewById(R.id.tvUploader);
-            tvUploader.setText(uploader);
+            tvUploader.setText(narrator);
         }
         public void setId(String id) {
             TextView tvId = (TextView) fView.findViewById(R.id.tvId);

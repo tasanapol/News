@@ -43,7 +43,7 @@ public class TwoFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_two, container, false);
         recyclerAudio1 = (RecyclerView) view.findViewById(R.id.recyclerAudio1);
-        fDatabase = FirebaseDatabase.getInstance().getReference().child("News");
+        fDatabase = FirebaseDatabase.getInstance().getReference().child("Audio2");
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerAudio1.setHasFixedSize(true);
         recyclerAudio1.setLayoutManager(layoutManager);

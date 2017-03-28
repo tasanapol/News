@@ -12,11 +12,14 @@ public class AudioAdapter {
     private String time;
     private String id;
     private String audio;
+    private String narrator;
 
     public AudioAdapter() {
     }
 
-    public AudioAdapter(String title, String uploader, String image, String date, String time, String id, String audio) {
+
+
+    public AudioAdapter(String title, String uploader, String image, String date, String time, String id, String audio, String narrator) {
         this.title = title;
         this.uploader = uploader;
         this.image = image;
@@ -24,6 +27,7 @@ public class AudioAdapter {
         this.time = time;
         this.id = id;
         this.audio = audio;
+        this.narrator = narrator;
     }
 
     public String getTitle() {
@@ -80,6 +84,14 @@ public class AudioAdapter {
 
     public void setAudio(String audio) {
         this.audio = audio;
+    }
+
+    public String getNarrator() {
+        return narrator;
+    }
+
+    public void setNarrator(String narrator) {
+        this.narrator = narrator;
     }
 
 

@@ -29,6 +29,7 @@
                 android:gravity="right"
                 android:textColor="@color/cardview_light_background"
                 android:textSize="13sp"
+                android:text="xxxxxxx"
                 android:textStyle="bold" />
 
             <ImageButton
@@ -133,37 +134,57 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/edtDescription"
-                    android:enabled="false"
+                    android:enabled="true"
                     android:hint="ชื่อผู้บรรยาย"
                     android:textColor="#333"
                     android:textColorHint="#000000"
                     android:textSize="15sp" />
             </com.github.florent37.materialtextfield.MaterialTextField>
 
+            <Spinner
+                android:id="@+id/spnType"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp">
+
+            </Spinner>
+
             ////////////////////////////////////////////////////////
 
-            <com.victor.loading.rotate.RotateLoading
-                android:id="@+id/rotateloading"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                app:loading_color="#ffffff"
-                app:loading_width="5dp" />
-
-            <Button
-                android:id="@+id/btnRecord"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:paddingTop="25dp"
-                android:background="@drawable/round_shape"
-                android:drawableTop="@drawable/ic_action_play"
-                android:textColor="#FFFFFF" />
+                android:orientation="horizontal">
 
+                <RelativeLayout
+                    android:layout_width="200dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
 
+                    <ImageView
+                        android:id="@+id/imgPauseRecord"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:src="@drawable/pauserecord" />
+
+                    <ImageView
+                        android:id="@+id/imgRecord"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:src="@drawable/record" />
+
+                </RelativeLayout>
+
+                <com.victor.loading.rotate.RotateLoading
+                    android:id="@+id/rotateloading"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    app:loading_color="#ffffff"
+                    app:loading_width="5dp" />
+            </LinearLayout>
             //////////////////////////////////////////////////////////////////////
 
             <info.hoang8f.widget.FButton
