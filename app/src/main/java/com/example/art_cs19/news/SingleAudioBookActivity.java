@@ -1,12 +1,17 @@
 package com.example.art_cs19.news;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PorterDuff;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PersistableBundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -23,6 +28,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 
 
 public class SingleAudioBookActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener {
@@ -49,43 +56,30 @@ public class SingleAudioBookActivity extends AppCompatActivity implements MediaP
     private int mediaFileLengthInMilliseconds;
     private int playPositionInMillisecconds;
     private int length;
+    private int newLength;
+    BackgroundSound mBackgroundSound;
+    private boolean isPlaying = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_audio_book);
         findView();
+        setView();
+        setClick();
 
-        mediaPlayer.seekTo(length);
-        mediaPlayer.start();
-        fDatabase.child(mPost_key).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+        mBackgroundSound = new BackgroundSound();
+        if(mBackgroundSound.getStatus() == AsyncTask.Status.RUNNING){
+            // My AsyncTask is currently doing work in doInBackground()
+            tvAudio.setText("KK");
+        }
 
-                post_namebook = (String) dataSnapshot.child("title").getValue();
-                post_audio = (String) dataSnapshot.child("audio").getValue();
-                post_date = (String) dataSnapshot.child("date").getValue();
-                post_time = (String) dataSnapshot.child("time").getValue();
-                post_narrator = (String) dataSnapshot.child("narrator").getValue();
-                post_id = (String) dataSnapshot.child("id").getValue();
-                post_img = (String) dataSnapshot.child("image").getValue();
+        if(mediaPlayer.isPlaying()){
+            tvAudio.setText("Cahcah");
+        }
+    }
 
-                tvShowNameBook.setText(post_namebook);
-                tvShowNarrator.setText(post_narrator);
-                tvShowTypeBook.setText(post_id);
-                tvAudio.setText(post_audio);
-                tvShowTime.setText(post_time);
-                tvShowDate.setText(post_date);
-                Picasso.with(SingleAudioBookActivity.this).load(post_img).into(imgShowPicBook);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
+    private void setClick() {
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,7 +95,7 @@ public class SingleAudioBookActivity extends AppCompatActivity implements MediaP
                 btnPause.setVisibility(View.VISIBLE);
                 //seekBar.setProgress((mediaPlayer.getCurrentPosition()*100) / mediaPlayer.getDuration());
                 primarySeekBarProgressUpdater();
-
+                tvAudio.setText("KK");
 
             }
         });
@@ -130,7 +124,42 @@ public class SingleAudioBookActivity extends AppCompatActivity implements MediaP
             }
         });
 
+        btnStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.stop();
+            }
+        });
     }
+
+    private void setView() {
+        fDatabase.child(mPost_key).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                post_namebook = (String) dataSnapshot.child("title").getValue();
+                post_audio = (String) dataSnapshot.child("audio").getValue();
+                post_date = (String) dataSnapshot.child("date").getValue();
+                post_time = (String) dataSnapshot.child("time").getValue();
+                post_narrator = (String) dataSnapshot.child("narrator").getValue();
+                post_id = (String) dataSnapshot.child("id").getValue();
+                post_img = (String) dataSnapshot.child("image").getValue();
+
+                tvShowNameBook.setText(post_namebook);
+                tvShowNarrator.setText(post_narrator);
+                tvShowTypeBook.setText(post_id);
+                tvAudio.setText(post_audio);
+                tvShowTime.setText(post_time);
+                tvShowDate.setText(post_date);
+                Picasso.with(SingleAudioBookActivity.this).load(post_img).into(imgShowPicBook);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     private void primarySeekBarProgressUpdater() {
         seekBar.setProgress((int) (((float) mediaPlayer.getCurrentPosition() / mediaFileLengthInMilliseconds) * 100)); // This math construction give a percentage of "was playing"/"song length"
@@ -178,8 +207,6 @@ public class SingleAudioBookActivity extends AppCompatActivity implements MediaP
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnBufferingUpdateListener(this);
         mediaPlayer.setOnCompletionListener(this);
-        //เซฟ เวลา
-
 
         fDatabase = FirebaseDatabase.getInstance().getReference("Audio");
         mPost_key = getIntent().getExtras().getString("post_key");
@@ -208,38 +235,57 @@ public class SingleAudioBookActivity extends AppCompatActivity implements MediaP
     @Override
     protected void onResume() {
         super.onResume();
-        primarySeekBarProgressUpdater();
         mediaPlayer.seekTo(length);
-        mediaPlayer.start();
-        btnPlay.setVisibility(View.GONE);
-        btnPause.setVisibility(View.VISIBLE);
+        mBackgroundSound = new BackgroundSound();
+        mBackgroundSound.execute((Void[]) null);
+        primarySeekBarProgressUpdater();
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mediaPlayer.pause();
-        btnPause.setVisibility(View.GONE);
-        btnPlay.setVisibility(View.VISIBLE);
-        mediaPlayer.pause();
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         length = mediaPlayer.getCurrentPosition();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mediaPlayer.pause();
-        btnPause.setVisibility(View.GONE);
-        btnPlay.setVisibility(View.VISIBLE);
-        mediaPlayer.pause();
         length = mediaPlayer.getCurrentPosition();
+        mBackgroundSound.cancel(true);
+    }
+
+    public class BackgroundSound extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            mediaPlayer.setVolume(1.0f, 1.0f);
+            mediaPlayer.start();
+            mediaPlayer.isPlaying();
+            isPlaying = true;
+            return null;
+        }
+
     }
 
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        mediaPlayer.seekTo(length);
-        mediaPlayer.start();
-    }
 }
+

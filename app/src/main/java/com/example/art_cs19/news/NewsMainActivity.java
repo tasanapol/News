@@ -295,5 +295,9 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
         tts.stop();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
+    }
 }

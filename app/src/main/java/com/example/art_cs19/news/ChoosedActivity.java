@@ -2,6 +2,7 @@ package com.example.art_cs19.news;
 
 
 import android.*;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -170,6 +172,7 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+
     @Override
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
@@ -179,8 +182,28 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
     }
     @Override
     protected void onDestroy() {
-        Intent intent = new Intent(this, RadioService.class);
-        stopService(intent);
         super.onDestroy();
+
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            new AlertDialog.Builder(this).setTitle("ออกจากโปรแกรม")
+                    .setMessage("คุณต้องการออกจากโปรแกรมใช่หรือไม่")
+                    .setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Intent.ACTION_MAIN);
+                            intent.addCategory(Intent.CATEGORY_HOME);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//***Change Here***
+                            startActivity(intent);
+                            Intent intent1 = new Intent(ChoosedActivity.this,RadioService.class);
+                            stopService(intent1);
+                            finish();
+                            System.exit(0);
+                        }
+                    }).setNegativeButton("ไม่", null).show();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

@@ -16,13 +16,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         //หน้าแรก
-        <activity android:name=".ChoosedActivity">
+        <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+        <activity android:name=".ChoosedActivity"/>
         //ครอปภาพ
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
@@ -61,7 +63,8 @@
             android:name=".PostAudioBookActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" /> <!-- ซ่อนคีย์บอร์ด -->
 
-        <activity android:name=".SingleAudioBookActivity"></activity>
+        <activity android:name=".SingleAudioBookActivity" />
+
     </application>
 
 </manifest>

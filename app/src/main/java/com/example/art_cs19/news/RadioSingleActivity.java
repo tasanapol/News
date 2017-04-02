@@ -43,21 +43,21 @@ public class RadioSingleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_radio_single);
         imgShowFm = (ImageView) findViewById(R.id.imgShowFm);
-        final RippleBackground rippleBackground = (RippleBackground) findViewById(R.id.content);
+        rippleBackground = (RippleBackground) findViewById(R.id.content);
         play = (ImageView) findViewById(R.id.play);
         pause = (ImageView) findViewById(R.id.pause);
-        int image1 = getIntent().getIntExtra("imageRadio", R.drawable.add_btn);
+        final int image1 = getIntent().getIntExtra("imageRadio", R.drawable.add_btn);
         imgShowFm.setImageResource(image1);
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         final String nameRadio1 = getIntent().getExtras().getString("nameRadio");
         Fm = getIntent().getExtras().getString("myFm");
 
-
         final Intent intent = new Intent(RadioSingleActivity.this, RadioService.class);
         intent.putExtra("image", image1);
         intent.putExtra("nameRadio", nameRadio1);
         intent.putExtra("Fm", Fm);
+
 
 
         if (RadioService.isServiceRunning == true) {
@@ -73,6 +73,7 @@ public class RadioSingleActivity extends AppCompatActivity {
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 rippleBackground.startRippleAnimation();
                 startService(intent);
                 started = true;
@@ -173,7 +174,6 @@ public class RadioSingleActivity extends AppCompatActivity {
 
                     }
                 }
-
 
             } else if (resultCode == RESULT_CANCELED) {
 

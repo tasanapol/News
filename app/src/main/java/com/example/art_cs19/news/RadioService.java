@@ -26,15 +26,8 @@ import java.io.IOException;
 
 public class RadioService extends Service {
 
-    private MediaSession mSession;
-
     private MediaPlayer mediaPlayer;
-
-
-    private MediaSessionManager mManager;
-    private MediaController mController;
-
-
+    private String Fm;
     public static boolean isServiceRunning;
 
     @Nullable
@@ -45,26 +38,15 @@ public class RadioService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        mSession.release();
         return super.onUnbind(intent);
     }
 
-    private void handleIntent(Intent intent) {
-        if (intent == null || intent.getAction() == null) {
-            return;
-        }
-
-
-
-    }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        handleIntent(intent);
-
-        final String Fm = intent.getExtras().getString("Fm");
+        Fm = intent.getExtras().getString("Fm");
 
         mediaPlayer = MediaPlayer.create(RadioService.this, Uri.parse(Fm));
 
@@ -75,18 +57,16 @@ public class RadioService extends Service {
         isServiceRunning = true;
 
         return START_STICKY;
-
     }
 
 
     @Override
     public void onDestroy() {
-        if(mediaPlayer != null){
+        if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer = null;
         }
         isServiceRunning = false;
-
         super.onDestroy();
     }
 
