@@ -224,6 +224,7 @@ public class PostAudioBookActivity extends AppCompatActivity {
                             .setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    mFirebaseAuth.addAuthStateListener(mAuthListener);
                                     Intent intent = new Intent(PostAudioBookActivity.this, LogInActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(intent);
@@ -231,6 +232,10 @@ public class PostAudioBookActivity extends AppCompatActivity {
                             })
                             .setNegativeButton("ไม่", null).show();
 
+                }else {
+                    Intent intent = new Intent(PostAudioBookActivity.this, AudioBookMainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                 }
             }
         };
@@ -626,7 +631,7 @@ public class PostAudioBookActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mFirebaseAuth.addAuthStateListener(mAuthListener);
+
     }
 }
 

@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
@@ -43,6 +44,7 @@ public class AudioBookMainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,12 +59,13 @@ public class AudioBookMainActivity extends AppCompatActivity {
                     Intent intent = new Intent(AudioBookMainActivity.this, LogInActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
+                }else {
+                    Intent intent = new Intent(AudioBookMainActivity.this, PostAudioBookActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                 }
             }
         };
-
-
-
 
         ////toolBar///
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -126,6 +129,8 @@ public class AudioBookMainActivity extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.action_logout) {
             mAuth.signOut();
+            Intent intent = new Intent(AudioBookMainActivity.this, LogInActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

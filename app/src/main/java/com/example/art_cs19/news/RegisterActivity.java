@@ -62,8 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
         String Telephone = edtTelephone.getText().toString().trim();
 
 
-
-        if (!username.equals("") && !password.equals("") && !email.equals("")) {
+        if (!username.equals("") && !email.equals("") && !Telephone.equals("")) {
             mProgress.setMessage("กำลังบันทึก...");
             mProgress.show();
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -81,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
 
-                    }else {
+                    } else {
 
                         new AlertDialog.Builder(RegisterActivity.this)
                                 .setTitle("กรุณากรอกอีเมลล์ที่ถูกต้อง")
@@ -97,17 +96,29 @@ public class RegisterActivity extends AppCompatActivity {
 
                 }
             });
-        } else {
+
+        } else if (password.length() < 8 && password.length() > 10) {
             new AlertDialog.Builder(RegisterActivity.this)
                     .setTitle("กรอกข้อมูลผิดพลาด")
-                    .setMessage("กรุณากรอกข้อมูลให้ครบ")
+                    .setMessage("กรุณากรอกรหัสผ่านให้มากกว่า 8 แต่น้อยกว่า 10 ")
                     .setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
                         }
                     })
-                    .setNegativeButton("ไม่", null).show();
+                    .setNegativeButton(null, null).show();
+        } else {
+            new AlertDialog.Builder(RegisterActivity.this)
+                    .setTitle("กรอกข้อมูลผิดพลาด")
+                    .setMessage("กรุณากรอกข้อมูลให้ครบทุกช่อง")
+                    .setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .setNegativeButton(null, null).show();
         }
     }
 
