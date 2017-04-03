@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -89,6 +90,8 @@ public class PostAudioBookActivity extends AppCompatActivity {
     String AudioSavePathInDevice = null;
     private ProgressDialog progressbar;
     Spinner spnType;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
 
     @Override
@@ -208,7 +211,33 @@ public class PostAudioBookActivity extends AppCompatActivity {
         edtDate.setText(DayName + "/" + MonthName + "/" + YearName);
         edtTime.setText(String.valueOf(time));
         tvPostId.setText(String.valueOf(timeSort));
+
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() == null) {
+                    new AlertDialog.Builder(PostAudioBookActivity.this)
+                            .setTitle("กรุณา Log In")
+                            .setMessage("กรุณาล็อกอินเพื่อสร้างหนังสือเสียงค่ะ")
+                            .setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(PostAudioBookActivity.this, LogInActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("ไม่", null).show();
+
+                }
+            }
+        };
+
     }
+
+
 
 
 
@@ -592,6 +621,12 @@ public class PostAudioBookActivity extends AppCompatActivity {
         int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
 
         return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mFirebaseAuth.addAuthStateListener(mAuthListener);
     }
 }
 

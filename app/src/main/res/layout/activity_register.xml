@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:float="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fbutton_color_midnight_blue"
+    android:orientation="vertical"
+    tools:context=".RegisterActivity">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Username  :"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtUsername"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:ems="10"
+                android:inputType="textPersonName" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Password  :"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtPassword"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:ems="10"
+                android:inputType="textPassword" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="E-mail  :"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtEmail"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:ems="10"
+                android:inputType="textEmailAddress" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Number Tel.  :"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtTelephone"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:ems="10"
+                android:inputType="number" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnSignUp"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:background="@color/fbutton_color_belize_hole"
+        android:gravity="center"
+        android:text="Sign Up"
+        android:textColor="#FFFFFF" />
+
+
+
+</LinearLayout>
