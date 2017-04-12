@@ -32,12 +32,15 @@
                 android:textStyle="bold" />
 
             <EditText
+                android:hint="username 8-10 character"
                 android:id="@+id/edtUsername"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:digits="abcdefghijklmnopqrst012345789"
+                android:maxLength="10"
+                android:inputType="text" />
         </LinearLayout>
 
         <LinearLayout
@@ -60,6 +63,7 @@
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 android:ems="10"
+                android:digits="abcdefghijklmnopqrst012345789"
                 android:inputType="textPassword" />
         </LinearLayout>
 

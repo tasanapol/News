@@ -12,6 +12,7 @@ import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -27,17 +28,17 @@ import java.util.Locale;
 public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
     private static final String TAG = ChoosedActivity.class.getName();
     private final int REQUEST_SPEECH = 100;
-    private ImageView news, music, utilities, choosedRadio, audioBook;
+    private ImageView news, music, utilities, radio, audioBook, call;
     private TextView text;
     private TextToSpeech tts;
+    private Toolbar toolbar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_choosed);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         isStoragePermissionGranted();
 
@@ -47,40 +48,66 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
         music = (ImageView) findViewById(R.id.music);
         utilities = (ImageView) findViewById(R.id.utilities);
         news = (ImageView) findViewById(R.id.news);
-        choosedRadio = (ImageView) findViewById(R.id.choosedRadio);
+        radio = (ImageView) findViewById(R.id.radio);
         audioBook =(ImageView)findViewById(R.id.audioBook);
+        call = (ImageView)findViewById(R.id.call);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         news.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                news.setImageResource(R.drawable.newspressed);
                 Intent intent = new Intent(getApplicationContext(), NewsMainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
-        choosedRadio.setOnClickListener(new View.OnClickListener() {
+        radio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                radio.setImageResource(R.drawable.radio);
                 Intent intent = new Intent(getApplicationContext(), RadioActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
         music.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                music.setImageResource(R.drawable.musicpressed);
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
         audioBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                audioBook.setImageResource(R.drawable.audiobookpressed);
                 Intent intent = new Intent(getApplicationContext(), AudioBookMainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
+        utilities.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                utilities.setImageResource(R.drawable.utilitiespressed);
+            }
+        });
+
+        call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                call.setImageResource(R.drawable.callpressed);
+            }
+        });
+
 
     }
 

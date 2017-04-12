@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
@@ -31,6 +33,7 @@ public class OneFragment extends Fragment{
     LinearLayoutManager layoutManager;
     private View view;
     private ProgressDialog progressbar;
+    private DatabaseReference mDatabaseUser;
 
 
     public OneFragment() {
@@ -40,9 +43,7 @@ public class OneFragment extends Fragment{
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        progressbar = new ProgressDialog(getActivity());
-        progressbar.setMessage("กำลังโหลด");
-        progressbar.show();
+
 
     }
 
@@ -63,18 +64,18 @@ public class OneFragment extends Fragment{
     @Override
     public void onStart() {
         super.onStart();
-        final FirebaseRecyclerAdapter<AudioAdapter, OneFragment.AudioViewHolder>
+        final FirebaseRecyclerAdapter<AudioAdapter, AudioViewHolder>
                 firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<AudioAdapter, OneFragment.AudioViewHolder>
-                (AudioAdapter.class, R.layout.cardview_audiobook, OneFragment.AudioViewHolder.class, fDatabase) {
+                (AudioAdapter.class, R.layout.cardview_audiobook, AudioViewHolder.class, fDatabase) {
 
             @Override
-            protected void populateViewHolder(OneFragment.AudioViewHolder viewHolder, final AudioAdapter model, int position) {
+            protected void populateViewHolder(AudioViewHolder viewHolder, final AudioAdapter model, int position) {
                 final String post_key = getRef(position).getKey();
                 viewHolder.setTitle(model.getTitle());
                 viewHolder.setAudio(model.getAudio());
                 viewHolder.setDate(model.getDate());
                 viewHolder.setTime(model.getTime());
-                viewHolder.setNarrator(model.getNarrator());
+                viewHolder.setUploader(model.getUploader());
                 viewHolder.setId(model.getId());
                 viewHolder.setImage(getActivity(), model.getImage());
 
@@ -90,7 +91,7 @@ public class OneFragment extends Fragment{
                     }
                 });
 
-                progressbar.dismiss();
+
             }
         };
         recyclerAudio1.setAdapter(firebaseRecyclerAdapter);
@@ -127,9 +128,9 @@ public class OneFragment extends Fragment{
         }
 
 
-        public void setNarrator(String narrator) {
+        public void setUploader(String uploader) {
             TextView tvUploader = (TextView) fView.findViewById(R.id.tvUploader);
-            tvUploader.setText(narrator);
+            tvUploader.setText(uploader);
         }
         public void setId(String id) {
             TextView tvId = (TextView) fView.findViewById(R.id.tvId);

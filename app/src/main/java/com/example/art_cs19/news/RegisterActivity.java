@@ -63,51 +63,55 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         if (!username.equals("") && !email.equals("") && !Telephone.equals("")) {
-            mProgress.setMessage("กำลังบันทึก...");
-            mProgress.show();
-            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        String user_id = mAuth.getCurrentUser().getUid();
-                        DatabaseReference current_user_db = mDatabase.child(user_id);
-                        current_user_db.child("name").setValue(username);
-                        current_user_db.child("image").setValue("default");
+            if (password.length() < 8 && password.length() > 10) {
+                new AlertDialog.Builder(RegisterActivity.this)
+                        .setTitle("กรอกข้อมูลผิดพลาด")
+                        .setMessage("กรุณากรอกรหัสผ่านให้มากกว่า 8 แต่น้อยกว่า 10 ")
+                        .setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                        edtPassword.requestFocus();
+                            }
+                        })
+                        .setNegativeButton(null, null).show();
 
-                        mProgress.dismiss();
+            } else {
 
-                        Intent intent = new Intent(RegisterActivity.this, AudioBookMainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
+                mProgress.setMessage("กำลังบันทึก...");
+                mProgress.show();
+                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            String user_id = mAuth.getCurrentUser().getUid();
+                            DatabaseReference current_user_db = mDatabase.child(user_id);
+                            current_user_db.child("name").setValue(username);
+                            current_user_db.child("image").setValue("default");
 
-                    } else {
+                            mProgress.dismiss();
 
-                        new AlertDialog.Builder(RegisterActivity.this)
-                                .setTitle("กรุณากรอกอีเมลล์ที่ถูกต้อง")
-                                .setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        edtEmail.requestFocus();
-                                    }
-                                }).setNegativeButton("ไม่", null).show();
-                        mProgress.dismiss();
+                            Intent intent = new Intent(RegisterActivity.this, AudioBookMainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
 
-                    }
+                        } else {
 
-                }
-            });
-
-        } else if (password.length() < 8 && password.length() > 10) {
-            new AlertDialog.Builder(RegisterActivity.this)
-                    .setTitle("กรอกข้อมูลผิดพลาด")
-                    .setMessage("กรุณากรอกรหัสผ่านให้มากกว่า 8 แต่น้อยกว่า 10 ")
-                    .setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                            new AlertDialog.Builder(RegisterActivity.this)
+                                    .setTitle("กรุณากรอกอีเมลล์ที่ถูกต้อง")
+                                    .setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            edtEmail.requestFocus();
+                                        }
+                                    }).setNegativeButton("ไม่", null).show();
+                            mProgress.dismiss();
 
                         }
-                    })
-                    .setNegativeButton(null, null).show();
+
+                    }
+                });
+            }
+
         } else {
             new AlertDialog.Builder(RegisterActivity.this)
                     .setTitle("กรอกข้อมูลผิดพลาด")

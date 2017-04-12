@@ -60,7 +60,6 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
     }
@@ -172,10 +171,17 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add) {
-            startActivity(new Intent(this, PostAudioBookActivity.class));
+            startActivity(new Intent(this, PostActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        menu.findItem(R.id.action_logout).setVisible(false);
+            // You can also use something like:
+            // menu.findItem(R.id.example_foobar).setEnabled(false);
+        return true;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

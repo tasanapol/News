@@ -51,21 +51,25 @@
             android:id="@+id/tvPostTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:paddingLeft="15dp"
             android:text="แสดงหัวข้อข่าวตรงนี้"
             android:textColor="@color/fbutton_color_carrot"
             android:textSize="16dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="1"/>
 
 
         <TextView
             android:id="@+id/tvPostDescription"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:paddingLeft="15dp"
-            android:text="แสดงเนื้อหาตรงนี้" />
+            android:text="แสดงเนื้อหาตรงนี้"
+            android:ellipsize="end"
+            android:maxLines="3"/>
 
 
     </LinearLayout>

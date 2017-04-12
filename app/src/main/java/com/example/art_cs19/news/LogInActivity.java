@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -51,7 +52,7 @@ public class LogInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 checkLogin();
-                finish();
+
             }
         });
 
@@ -62,33 +63,34 @@ public class LogInActivity extends AppCompatActivity {
         String email = edtLogInEmail.getText().toString().trim();
         String password = edtLogInPass.getText().toString().trim();
 
-        if(!email.equals("") && !password.equals("")){
+        if (!email.equals("") && !password.equals("")) {
 
             mProgress.setMessage("กำลังเข้าสู่ระบบ..");
             mProgress.show();
-                mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            mProgress.dismiss();
-                            checkUserExist();
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        mProgress.dismiss();
+                        checkUserExist();
+                        finish();
 
 
-                        }else{
-                            mProgress.dismiss();
-                            new AlertDialog.Builder(LogInActivity.this)
-                                    .setTitle("กรอกข้อมูลผิดพลาด")
-                                    .setMessage("อีเมลล์หรือรหัสผ่านไม่ถูกต้อง")
-                                    .setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                                edtLogInEmail.requestFocus();
-                                        }
-                                    })
-                                    .setNegativeButton(null, null).show();
-                        }
+                    } else {
+                        mProgress.dismiss();
+                        new AlertDialog.Builder(LogInActivity.this)
+                                .setTitle("กรอกข้อมูลผิดพลาด")
+                                .setMessage("อีเมลล์หรือรหัสผ่านไม่ถูกต้อง")
+                                .setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        edtLogInEmail.requestFocus();
+                                    }
+                                })
+                                .setNegativeButton(null, null).show();
                     }
-                });
+                }
+            });
 
         }
 
@@ -97,26 +99,17 @@ public class LogInActivity extends AppCompatActivity {
 
     private void checkUserExist() {
         final String user_id = mAuth.getCurrentUser().getUid();
-
         //ตรวจสอบว่า user login หรือ log out อยู่่
         mDatabaseUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild(user_id)){
-                    Intent intent = new Intent(LogInActivity.this, AudioBookMainActivity.class);
+                if (dataSnapshot.hasChild(user_id)) {
+                    Intent intent = new Intent(LogInActivity.this, PostAudioBookActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
-                }else{
-                    new AlertDialog.Builder(LogInActivity.this)
-                            .setTitle("อะไรยังงงอยู่")
-                            .setMessage("ยังงงอยู่")
-                            .setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
 
-                                }
-                            })
-                            .setNegativeButton(null, null).show();
+                } else {
+                    Toast.makeText(getApplicationContext(),"คุณต้องตั้งค่า",Toast.LENGTH_LONG);
                 }
             }
 
@@ -128,11 +121,12 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     private void setView() {
-        edtLogInPass = (EditText)findViewById(R.id.edtLogInPass);
-        edtLogInEmail = (EditText)findViewById(R.id.edtLogInEmail);
-        btnLogIn = (Button)findViewById(R.id.btnLogIn);
-        tvRegister = (TextView)findViewById(R.id.tvRegister);
+        edtLogInPass = (EditText) findViewById(R.id.edtLogInPass);
+        edtLogInEmail = (EditText) findViewById(R.id.edtLogInEmail);
+        btnLogIn = (Button) findViewById(R.id.btnLogIn);
+        tvRegister = (TextView) findViewById(R.id.tvRegister);
         mAuth = FirebaseAuth.getInstance();
+
         mDatabaseUser = FirebaseDatabase.getInstance().getReference().child("User");
         mDatabaseUser.keepSynced(true);
 

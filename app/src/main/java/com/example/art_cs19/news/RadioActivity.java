@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -21,8 +22,13 @@ public class RadioActivity extends AppCompatActivity  implements TextToSpeech.On
     String buddha = "http://61.19.252.133:8000/korat"; // พุทธเรดิโอ 99.0
     String theshcok = "http://radiom.spicymkt.com:1870/;stream.nsv";// theshock
     String korea = "https://radio.ikorea.in.th/CH01"; // iKorea
+    String eazy = "http://wzedge2.becteroradio.com/Eazy/Eazy-Listen-Med/playlist.m3u8"; //105.5
+    String virgin = "http://wzedge2.becteroradio.com/Star/Star-Listen-Med/playlist.m3u8"; //virgin star Fm
+    String surf = "http://112.121.150.133:9626/;stream.nsv"; //surf 93.5
+    String chill = "http://real3.atimemedia.com:1935/live/chill.sdp/playlist.m3u8";//chill
+    String rad = "http://wzedge2.becteroradio.com/Rad/Rad-Listen-Med/playlist.m3u8";//RadRadio ตื้ดๆ
 
-    CardView radio1, radio2, radio3, radio4, radio5, radio6 , radio7;
+    ImageView radio1, radio2, radio3, radio4, radio5, radio6 , radio7, radio8 , radio9 , radio10;
 
     private final int REQUEST_SPEECH = 100;
 
@@ -37,23 +43,28 @@ public class RadioActivity extends AppCompatActivity  implements TextToSpeech.On
 
         tts = new TextToSpeech(this, this, "com.google.android.tts");
 
-        radio1 = (CardView)findViewById(R.id.radio1);
-        radio2 = (CardView)findViewById(R.id.radio2);
-        radio3 = (CardView)findViewById(R.id.radio3);
-        radio4 = (CardView)findViewById(R.id.radio4);
-        radio5 = (CardView)findViewById(R.id.radio5);
-        radio6 = (CardView)findViewById(R.id.radio6);
-        radio7 = (CardView)findViewById(R.id.radio7);
+        radio1 = (ImageView) findViewById(R.id.cool);
+        radio2 = (ImageView) findViewById(R.id.get);
+        radio3 = (ImageView) findViewById(R.id.looktung);
+        radio4 = (ImageView) findViewById(R.id.efm);
+        radio5 = (ImageView) findViewById(R.id.chill);
+        radio6 = (ImageView) findViewById(R.id.theshock);
+        radio7 = (ImageView) findViewById(R.id.rad);
+        radio8 = (ImageView) findViewById(R.id.eazy);
+        radio9 = (ImageView)findViewById(R.id.surf);
+        radio10 = (ImageView)findViewById(R.id.virgin);
 
 
         radio1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                radio1.setImageResource(R.drawable.cool93pressed);
                 Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
                 intent.putExtra("myFm", cool);
-                intent.putExtra("imageRadio" ,R.drawable.cool93);
+                intent.putExtra("imageRadio" ,R.drawable.logocool);
                 intent.putExtra("nameRadio", "Cool93");
                 startActivity(intent);
+
 
             }
         });
@@ -61,61 +72,107 @@ public class RadioActivity extends AppCompatActivity  implements TextToSpeech.On
         radio2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                radio2.setImageResource(R.drawable.getpressed);
                 Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
                 intent.putExtra("myFm", get);
-                intent.putExtra("imageRadio" ,R.drawable.get102);
+                intent.putExtra("imageRadio" ,R.drawable.logoget);
                 startActivity(intent);
+
             }
         });
 
         radio3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                radio3.setImageResource(R.drawable.looktungpressed);
                 Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
                 intent.putExtra("myFm", looktung);
-                intent.putExtra("imageRadio" ,R.drawable.looktung);
+                intent.putExtra("imageRadio" ,R.drawable.looktunglogo);
                 startActivity(intent);
+
             }
         });
 
         radio4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                radio4.setImageResource(R.drawable.efmpreesed);
                 Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
                 intent.putExtra("myFm", efm);
-                intent.putExtra("imageRadio" ,R.drawable.efm);
+                intent.putExtra("imageRadio" ,R.drawable.efmlogo);
                 startActivity(intent);
+
             }
         });
 
         radio5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                radio5.setImageResource(R.drawable.chillpressed);
                 Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
-                intent.putExtra("myFm", buddha);
-                intent.putExtra("imageRadio" ,R.drawable.buddha);
+                intent.putExtra("myFm", chill);
+                intent.putExtra("imageRadio" ,R.drawable.chilllogo);
                 startActivity(intent);
+
             }
         });
         radio6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                radio6.setImageResource(R.drawable.theshockpressed);
                 Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
                 intent.putExtra("myFm", theshcok);
-                intent.putExtra("imageRadio" ,R.drawable.theshock);
+                intent.putExtra("imageRadio" ,R.drawable.theshocklogo);
                 startActivity(intent);
+
             }
         });
 
         radio7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                radio7.setImageResource(R.drawable.radpreesed);
                 Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
-                intent.putExtra("myFm", korea);
-                intent.putExtra("imageRadio" ,R.drawable.korea);
+                intent.putExtra("myFm", rad);
+                intent.putExtra("imageRadio" ,R.drawable.radlogo);
+                startActivity(intent);
+
+            }
+        });
+        radio8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                radio8.setImageResource(R.drawable.eazypressed);
+                Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
+                intent.putExtra("myFm", eazy);
+                intent.putExtra("imageRadio" ,R.drawable.logoeazy);
                 startActivity(intent);
             }
         });
+
+        radio9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                radio9.setImageResource(R.drawable.surfpressed);
+                Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
+                intent.putExtra("myFm", surf);
+                intent.putExtra("imageRadio" ,R.drawable.logosurf);
+                startActivity(intent);
+            }
+        });
+
+        radio10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                radio10.setImageResource(R.drawable.virginpressed);
+                Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
+                intent.putExtra("myFm", virgin);
+                intent.putExtra("imageRadio" ,R.drawable.logovirgin);
+                startActivity(intent);
+            }
+        });
+
+
 
     }
 
@@ -192,59 +249,59 @@ public class RadioActivity extends AppCompatActivity  implements TextToSpeech.On
                     } else if (mostLikelyThingHeard.toUpperCase().equals("get")) {
                         Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
                         intent.putExtra("myFm", get);
-                        intent.putExtra("imageRadio" ,R.drawable.get102);
+                        intent.putExtra("imageRadio" ,R.drawable.logoget);
                         startActivity(intent);
 
                     } else if (mostLikelyThingHeard.toUpperCase().equals("102.5")) {
                         Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
                         intent.putExtra("myFm", get);
-                        intent.putExtra("imageRadio" ,R.drawable.get102);
+                        intent.putExtra("imageRadio" ,R.drawable.logoget);
                         startActivity(intent);
 
                     } else if (mostLikelyThingHeard.toUpperCase().equals("94.5")) {
                         Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
                         intent.putExtra("myFm", looktung);
-                        intent.putExtra("imageRadio" ,R.drawable.looktung);
+                        intent.putExtra("imageRadio" ,R.drawable.looktunglogo);
                         startActivity(intent);
 
                     }else if (mostLikelyThingHeard.toUpperCase().equals("ลูกทุ่ง")) {
                         Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
                         intent.putExtra("myFm", looktung);
-                        intent.putExtra("imageRadio" ,R.drawable.looktung);
+                        intent.putExtra("imageRadio" ,R.drawable.looktunglogo);
                         startActivity(intent);
 
 
                     }else if (mostLikelyThingHeard.toUpperCase().equals("94")) {
                         Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
                         intent.putExtra("myFm", efm);
-                        intent.putExtra("imageRadio" ,R.drawable.efm);
+                        intent.putExtra("imageRadio" ,R.drawable.efmlogo);
                         startActivity(intent);
 
 
                     }else if (mostLikelyThingHeard.toUpperCase().equals("EFM")) {
                         Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
                         intent.putExtra("myFm", efm);
-                        intent.putExtra("imageRadio" ,R.drawable.efm);
+                        intent.putExtra("imageRadio" ,R.drawable.efmlogo);
                         startActivity(intent);
 
 
-                    }else if (mostLikelyThingHeard.toUpperCase().equals("พุทธเรดิโอ")) {
+                    }else if (mostLikelyThingHeard.toUpperCase().equals("chill")) {
                         Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
-                        intent.putExtra("myFm", buddha);
-                        intent.putExtra("imageRadio" ,R.drawable.buddha);
+                        intent.putExtra("myFm", chill);
+                        intent.putExtra("imageRadio" ,R.drawable.chilllogo);
                         startActivity(intent);
 
 
                     }else if (mostLikelyThingHeard.toUpperCase().equals("เดอะช็อค")) {
                         Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
                         intent.putExtra("myFm", theshcok);
-                        intent.putExtra("imageRadio" ,R.drawable.theshock);
+                        intent.putExtra("imageRadio" ,R.drawable.theshocklogo);
                         startActivity(intent);
 
-                    }else if (mostLikelyThingHeard.toUpperCase().equals("เกาหลี")) {
+                    }else if (mostLikelyThingHeard.toUpperCase().equals("RAD")) {
                         Intent intent = new Intent(RadioActivity.this, RadioSingleActivity.class);
-                        intent.putExtra("myFm", korea);
-                        intent.putExtra("imageRadio" ,R.drawable.korea);
+                        intent.putExtra("myFm", rad);
+                        intent.putExtra("imageRadio" ,R.drawable.radlogo);
                         startActivity(intent);
 
                     }

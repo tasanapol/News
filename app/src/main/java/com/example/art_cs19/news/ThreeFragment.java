@@ -1,5 +1,6 @@
 package com.example.art_cs19.news;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ public class ThreeFragment extends Fragment {
     private Query fDatabase;
     LinearLayoutManager layoutManager;
     private View view;
+    private ProgressDialog progressbar;
 
     public ThreeFragment() {
         // Required empty public constructor
@@ -33,6 +35,7 @@ public class ThreeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -44,6 +47,7 @@ public class ThreeFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerAudio1.setHasFixedSize(true);
         recyclerAudio1.setLayoutManager(layoutManager);
+
         return view;
 
     }
@@ -51,12 +55,12 @@ public class ThreeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        final FirebaseRecyclerAdapter<AudioAdapter, TwoFragment.AudioViewHolder>
-                firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<AudioAdapter, TwoFragment.AudioViewHolder>
-                (AudioAdapter.class, R.layout.cardview_audiobook, TwoFragment.AudioViewHolder.class, fDatabase) {
+        final FirebaseRecyclerAdapter<AudioAdapter, AudioViewHolder>
+                firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<AudioAdapter, AudioViewHolder>
+                (AudioAdapter.class, R.layout.cardview_audiobook, AudioViewHolder.class, fDatabase) {
 
             @Override
-            protected void populateViewHolder(TwoFragment.AudioViewHolder viewHolder, AudioAdapter model, int position) {
+            protected void populateViewHolder(AudioViewHolder viewHolder, AudioAdapter model, int position) {
                 final String post_key = getRef(position).getKey();
                 viewHolder.setTitle(model.getTitle());
                 viewHolder.setAudio(model.getAudio());

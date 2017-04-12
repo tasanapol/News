@@ -1,5 +1,6 @@
 package com.example.art_cs19.news;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
@@ -25,6 +27,8 @@ public class TwoFragment extends Fragment {
     private Query fDatabase;
     LinearLayoutManager layoutManager;
     private View view;
+    private ProgressDialog progressbar;
+    private DatabaseReference mDatabaseUser;
 
     public TwoFragment() {
         // Required empty public constructor
@@ -33,6 +37,8 @@ public class TwoFragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
     }
 
@@ -47,6 +53,7 @@ public class TwoFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerAudio1.setHasFixedSize(true);
         recyclerAudio1.setLayoutManager(layoutManager);
+
         return view;
 
     }

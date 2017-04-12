@@ -43,6 +43,7 @@ public class AudioBookMainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mDatabaseUser;
 
 
     @Override
@@ -50,7 +51,8 @@ public class AudioBookMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_book_main);
 
-
+        mDatabaseUser = FirebaseDatabase.getInstance().getReference().child("User");
+        mDatabaseUser.keepSynced(true);
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override

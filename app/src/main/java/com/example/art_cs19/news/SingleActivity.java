@@ -5,8 +5,10 @@ import android.os.Build;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.RequiresApi;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -48,7 +50,7 @@ public class SingleActivity extends AppCompatActivity implements TextToSpeech.On
     private final int REQUEST_SPEECH = 100;
     private int DayOfWeek;
     private String DayOfWeekName;
-
+    private Toolbar toolbar;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -64,6 +66,8 @@ public class SingleActivity extends AppCompatActivity implements TextToSpeech.On
         fShowSingleDate = (TextView) findViewById(R.id.tvShowDate);
         fShowSingleTime = (TextView) findViewById(R.id.tvShowTime);
         btnRead = (CircleButton) findViewById(R.id.btnRead);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
 
         Calendar cal = Calendar.getInstance();

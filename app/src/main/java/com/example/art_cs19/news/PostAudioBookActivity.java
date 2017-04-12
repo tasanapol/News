@@ -28,10 +28,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -83,15 +89,18 @@ public class PostAudioBookActivity extends AppCompatActivity {
     private static final int GALLERY_REQUEST = 1;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private String file_path = null;
-    MediaRecorder mediaRecorder;
-    String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
+    private MediaRecorder mediaRecorder;
+    private String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
     public static final int RequestPermissionCode = 1;
-    Random random;
-    String AudioSavePathInDevice = null;
+    private Random random;
+    private String AudioSavePathInDevice = null;
     private ProgressDialog progressbar;
-    Spinner spnType;
-    private FirebaseAuth mFirebaseAuth;
+    private Spinner spnType;
+    private FirebaseAuth mAuth , mAuth2;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseUser mCurrentUser;
+    private DatabaseReference mDatabaseUser, mDatabaseUser2;
+
 
 
     @Override
@@ -99,12 +108,29 @@ public class PostAudioBookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_audio_book);
         findView();
+        DateCalender();
+
+
         progressbar = new ProgressDialog(this);
         fStorage = FirebaseStorage.getInstance().getReference();
         fDatabase = FirebaseDatabase.getInstance().getReference().child("Audio");
         fDatabase2 = FirebaseDatabase.getInstance().getReference().child("Audio2");
         fDatabase3 = FirebaseDatabase.getInstance().getReference().child("Audio3");
         random = new Random();
+        edtDate.setText(DayName + "/" + MonthName + "/" + YearName);
+        edtTime.setText(String.valueOf(time));
+        tvPostId.setText(String.valueOf(timeSort));
+
+
+
+        mAuth = FirebaseAuth.getInstance();
+        mAuth2 = FirebaseAuth.getInstance();
+
+        mCurrentUser = mAuth.getCurrentUser();
+        mDatabaseUser = FirebaseDatabase.getInstance().getReference().child("User").child(mCurrentUser.getUid());
+        mDatabaseUser2 = FirebaseDatabase.getInstance().getReference().child("User");
+        mDatabaseUser2.keepSynced(true);
+
 
 
         List<String> listProvince = new ArrayList<String>();
@@ -134,13 +160,15 @@ public class PostAudioBookActivity extends AppCompatActivity {
                             startPosting2();
                         }
                     });
-                }else if(position == 3){
+                } else if (position == 3) {
                     btnSubmit.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             startPosting3();
                         }
                     });
+                }else {
+
                 }
             }
 
@@ -207,13 +235,7 @@ public class PostAudioBookActivity extends AppCompatActivity {
             }
         });
 
-        DateCalender();
-        edtDate.setText(DayName + "/" + MonthName + "/" + YearName);
-        edtTime.setText(String.valueOf(time));
-        tvPostId.setText(String.valueOf(timeSort));
 
-
-        mFirebaseAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -224,7 +246,7 @@ public class PostAudioBookActivity extends AppCompatActivity {
                             .setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    mFirebaseAuth.addAuthStateListener(mAuthListener);
+                                    mAuth.addAuthStateListener(mAuthListener);
                                     Intent intent = new Intent(PostAudioBookActivity.this, LogInActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(intent);
@@ -232,13 +254,36 @@ public class PostAudioBookActivity extends AppCompatActivity {
                             })
                             .setNegativeButton("ไม่", null).show();
 
-                }else {
+                } else {
                     Intent intent = new Intent(PostAudioBookActivity.this, AudioBookMainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }
             }
         };
+
+        ////////////////////////เช็คว่าล็อคอินไว้หรือไม่
+        final String user_id = mAuth.getCurrentUser().getUid();
+        final String Email = mAuth.getCurrentUser().getEmail();
+
+
+        //ตรวจสอบว่า user login หรือ log out อยู่่
+        mDatabaseUser2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(user_id)) {
+                    edtUploader.setText(Email);
+
+                } else {
+                    Toast.makeText(getApplicationContext(),"คุณต้องตั้งค่า",Toast.LENGTH_LONG);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -279,10 +324,8 @@ public class PostAudioBookActivity extends AppCompatActivity {
     }
 
     private void startPosting() {
-
         progressbar.setMessage("กำลังอัพโหลด กรุณารอสักครู่");
         progressbar.show();
-
         final String audionName_val = edtAudioName.getText().toString().trim();
         final String uploader_val = edtUploader.getText().toString().trim();
         final String date_val = edtDate.getText().toString().trim();
@@ -297,9 +340,7 @@ public class PostAudioBookActivity extends AppCompatActivity {
                 && AudioSavePathInDevice != null) {
 
             final Uri uri = Uri.fromFile(new File(AudioSavePathInDevice));
-
             StorageReference filepathAudio = fStorage.child("Audio_Files").child(uri.getLastPathSegment());///ประกาศเป็นตัวแปรหลัก
-
             filepathAudio.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -313,21 +354,41 @@ public class PostAudioBookActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     @SuppressWarnings("VisibleForTests") Uri dowloadUri = taskSnapshot.getDownloadUrl();
-
-                    newPost.child("title").setValue(audionName_val);
-                    newPost.child("uploader").setValue(uploader_val);
-                    newPost.child("date").setValue(date_val);
-                    newPost.child("time").setValue(time_val);
-                    newPost.child("narrator").setValue(narrator_val);
-                    newPost.child("id").setValue(id_val);
                     newPost.child("image").setValue(dowloadUri.toString());
+
+                    mDatabaseUser.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            newPost.child("title").setValue(audionName_val);
+                            newPost.child("username").setValue(mCurrentUser.getUid());
+                            newPost.child("date").setValue(date_val);
+                            newPost.child("time").setValue(time_val);
+                            newPost.child("narrator").setValue(narrator_val);
+                            newPost.child("id").setValue(id_val);
+                            newPost.child("uploader").setValue(dataSnapshot.child("name").getValue()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        startActivity(new Intent(PostAudioBookActivity.this, AudioBookMainActivity.class));
+                                    }
+                                }
+                            });
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
                     progressbar.dismiss();
 
-                    startActivity(new Intent(PostAudioBookActivity.this, AudioBookMainActivity.class));
+
                     edtAudioName.setText("");
                     edtUploader.setText("");
                     imgAudioPic.setImageResource(R.drawable.add_btn);
+
                 }
             });
         } else {
@@ -342,6 +403,7 @@ public class PostAudioBookActivity extends AppCompatActivity {
             });
             builder.show();
             progressbar.dismiss();
+
         }
     }
 
@@ -362,9 +424,7 @@ public class PostAudioBookActivity extends AppCompatActivity {
                 && AudioSavePathInDevice != null) {
 
             final Uri uri = Uri.fromFile(new File(AudioSavePathInDevice));
-
             StorageReference filepathAudio = fStorage.child("Audio_Files").child(uri.getLastPathSegment());///ประกาศเป็นตัวแปรหลัก
-
             filepathAudio.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -378,17 +438,35 @@ public class PostAudioBookActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     @SuppressWarnings("VisibleForTests") Uri dowloadUri = taskSnapshot.getDownloadUrl();
-                    newPost.child("title").setValue(audionName_val);
-                    newPost.child("uploader").setValue(uploader_val);
-                    newPost.child("date").setValue(date_val);
-                    newPost.child("time").setValue(time_val);
-                    newPost.child("narrator").setValue(narrator_val);
-                    newPost.child("id").setValue(id_val);
                     newPost.child("image").setValue(dowloadUri.toString());
 
-                    progressbar.dismiss();
+                    mDatabaseUser.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            newPost.child("title").setValue(audionName_val);
+                            newPost.child("username").setValue(mCurrentUser.getUid());
+                            newPost.child("date").setValue(date_val);
+                            newPost.child("time").setValue(time_val);
+                            newPost.child("narrator").setValue(narrator_val);
+                            newPost.child("id").setValue(id_val);
+                            newPost.child("uploader").setValue(dataSnapshot.child("name").getValue()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        startActivity(new Intent(PostAudioBookActivity.this, AudioBookMainActivity.class));
+                                    }
+                                }
+                            });
 
-                    startActivity(new Intent(PostAudioBookActivity.this, AudioBookMainActivity.class));
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    progressbar.dismiss();
                     edtAudioName.setText("");
                     edtUploader.setText("");
                     imgAudioPic.setImageResource(R.drawable.add_btn);
@@ -410,6 +488,7 @@ public class PostAudioBookActivity extends AppCompatActivity {
 
         }
     }
+
     private void startPosting3() {
         progressbar.setMessage("กำลังอัพโหลด กรุณารอสักครู่");
         progressbar.show();
@@ -626,6 +705,10 @@ public class PostAudioBookActivity extends AppCompatActivity {
         int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
 
         return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void checkUserExist() {
+
     }
 
     @Override

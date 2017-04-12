@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#232323"
+    android:background="#bcb0bc"
     tools:context="com.example.art_cs19.news.RadioSingleActivity">
 
     <LinearLayout
