@@ -2,9 +2,12 @@ package com.example.art_cs19.news;
 
 
 import android.*;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -15,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -32,6 +36,7 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
     private TextView text;
     private TextToSpeech tts;
     private Toolbar toolbar;
+    private boolean connected = false;
 
 
     @Override
@@ -42,6 +47,7 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
 
         isStoragePermissionGranted();
 
+
         tts = new TextToSpeech(this, this, "com.google.android.tts");
 
         news = (ImageView) findViewById(R.id.news);
@@ -49,8 +55,8 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
         utilities = (ImageView) findViewById(R.id.utilities);
         news = (ImageView) findViewById(R.id.news);
         radio = (ImageView) findViewById(R.id.radio);
-        audioBook =(ImageView)findViewById(R.id.audioBook);
-        call = (ImageView)findViewById(R.id.call);
+        audioBook = (ImageView) findViewById(R.id.audioBook);
+        call = (ImageView) findViewById(R.id.call);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -59,9 +65,7 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
             @Override
             public void onClick(View view) {
                 news.setImageResource(R.drawable.newspressed);
-                Intent intent = new Intent(getApplicationContext(), NewsMainActivity.class);
-                startActivity(intent);
-                finish();
+                isOnlineNews();
             }
         });
 
@@ -69,9 +73,8 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
             @Override
             public void onClick(View v) {
                 radio.setImageResource(R.drawable.radio);
-                Intent intent = new Intent(getApplicationContext(), RadioActivity.class);
-                startActivity(intent);
-                finish();
+                isOnlineRadio();
+
             }
         });
 
@@ -89,9 +92,7 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
             @Override
             public void onClick(View v) {
                 audioBook.setImageResource(R.drawable.audiobookpressed);
-                Intent intent = new Intent(getApplicationContext(), AudioBookMainActivity.class);
-                startActivity(intent);
-                finish();
+                isOnlineAudioBook();
             }
         });
         utilities.setOnClickListener(new View.OnClickListener() {
@@ -111,23 +112,6 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
 
     }
 
-    public boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG, "Permission is granted");
-                return true;
-            } else {
-
-                Log.v(TAG, "Permission is revoked");
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        } else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG, "Permission is granted");
-            return true;
-        }
-    }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -143,7 +127,7 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
                 return true;
             case KeyEvent.KEYCODE_VOLUME_DOWN:
                 if (action == KeyEvent.ACTION_DOWN) {
-                    promtspeech();
+
                 }
                 return true;
             default:
@@ -176,17 +160,16 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
                     //คำสั่งเสียง
                     String mostLikelyThingHeard = matches.get(0);
                     if (mostLikelyThingHeard.toUpperCase().equals("วิทยุ")) {
-                        startActivity(new Intent(this, RadioActivity.class));
+
 
                     } else if (mostLikelyThingHeard.toUpperCase().equals("ข่าว")) {
-                        startActivity(new Intent(this, NewsMainActivity.class));
+
 
                     } else if (mostLikelyThingHeard.toUpperCase().equals("เพลง")) {
                         startActivity(new Intent(this, MainActivity.class));
 
                     } else if (mostLikelyThingHeard.toUpperCase().equals("UTILITY")) {
 
-                        tts.speak("ยินดีต้องรับเข้าสู่หน้าอรรถประโยชน์", TextToSpeech.QUEUE_FLUSH, null, "");
                     }
 
 
@@ -207,11 +190,13 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
         }
 
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
@@ -224,7 +209,7 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
                             intent.addCategory(Intent.CATEGORY_HOME);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//***Change Here***
                             startActivity(intent);
-                            Intent intent1 = new Intent(ChoosedActivity.this,RadioService.class);
+                            Intent intent1 = new Intent(ChoosedActivity.this, RadioService.class);
                             stopService(intent1);
                             finish();
                             System.exit(0);
@@ -233,4 +218,58 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
         }
         return super.onKeyDown(keyCode, event);
     }
+
+    public boolean isOnlineRadio() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            startActivity(new Intent(this, RadioActivity.class));
+            finish();
+            return connected = true;
+        } else {
+            tts.speak("กรุณาเชื่อมต่ออินเตอร์เน็ต", TextToSpeech.QUEUE_FLUSH, null, "");
+            return connected = false;
+        }
+    }
+
+    public boolean isOnlineAudioBook() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            startActivity(new Intent(this, AudioBookMainActivity.class));
+            finish();
+            return connected = true;
+        } else {
+            tts.speak("กรุณาเชื่อมต่ออินเตอร์เน็ต", TextToSpeech.QUEUE_FLUSH, null, "");
+            return connected = false;
+        }
+    }
+
+    public boolean isOnlineNews() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            startActivity(new Intent(this, NewsMainActivity.class));
+            finish();
+            return connected = true;
+        } else {
+            tts.speak("กรุณาเชื่อมต่ออินเตอร์เน็ต", TextToSpeech.QUEUE_FLUSH, null, "");
+            return connected = false;
+        }
+    }
+
+    public boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG, "Permission is granted");
+                return true;
+            } else {
+
+                Log.v(TAG, "Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG, "Permission is granted");
+            return true;
+        }
+    }
+
 }
