@@ -24,16 +24,16 @@ import java.util.Locale;
 
 public class RadioSingleActivity extends AppCompatActivity {
 
-    ImageView imgShowFm;
-    MediaPlayer mediaPlayer;
-    boolean prepared = false;
-    boolean started = false;
-    static ImageView play;
-    static ImageView pause;
+    private ImageView imgShowFm;
+    private MediaPlayer mediaPlayer;
+    private boolean prepared = false;
+    private  boolean started = false;
+    private static ImageView play;
+    private static ImageView pause;
 
-    String Fm;
+    private String Fm;
 
-    RippleBackground rippleBackground;
+    private RippleBackground rippleBackground;
 
     private final int REQUEST_SPEECH = 100;
 
@@ -54,8 +54,6 @@ public class RadioSingleActivity extends AppCompatActivity {
         Fm = getIntent().getExtras().getString("myFm");
 
         final Intent intent = new Intent(RadioSingleActivity.this, RadioService.class);
-        intent.putExtra("image", image1);
-        intent.putExtra("nameRadio", nameRadio1);
         intent.putExtra("Fm", Fm);
 
 
@@ -73,7 +71,6 @@ public class RadioSingleActivity extends AppCompatActivity {
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 rippleBackground.startRippleAnimation();
                 startService(intent);
                 started = true;
@@ -133,7 +130,6 @@ public class RadioSingleActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SPEECH) {
@@ -181,21 +177,29 @@ public class RadioSingleActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+    /////////////////////////////////////////////////////////////////////
+
 
     @Override
     protected void onPause() {
+        rippleBackground.stopRippleAnimation();
+        pause.setVisibility(View.GONE);
+        play.setVisibility(View.VISIBLE);
         super.onPause();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-
-
-    }
 
     @Override
     protected void onResume() {
+        if (RadioService.isServiceRunning == true) {
+            rippleBackground.startRippleAnimation();
+            pause.setVisibility(View.VISIBLE);
+            play.setVisibility(View.GONE);
+        } else if (RadioService.isServiceRunning == false) {
+            rippleBackground.stopRippleAnimation();
+            pause.setVisibility(View.GONE);
+            play.setVisibility(View.VISIBLE);
+        }
         super.onResume();
     }
 

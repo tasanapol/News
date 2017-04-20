@@ -35,7 +35,8 @@
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 android:ems="10"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:digits="abcdefghijklmnopqrst1234567890@."/>
         </LinearLayout>
 
         <LinearLayout
@@ -58,7 +59,8 @@
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 android:ems="10"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:digits="abcdefghijklmnopqrst1234567890@.ABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
         </LinearLayout>
 
 

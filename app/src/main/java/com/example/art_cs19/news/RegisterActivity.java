@@ -97,7 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
                         } else {
 
                             new AlertDialog.Builder(RegisterActivity.this)
-                                    .setTitle("กรุณากรอกอีเมลล์ที่ถูกต้อง")
+                                    .setTitle("กรุณากรอกอีเมลล์ที่ถูกต้อง, หรือรหัสผ่านให้ครบ 8-10 ตัว")
                                     .setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {

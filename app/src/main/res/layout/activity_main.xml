@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
-    android:background="@color/fbutton_color_midnight__dark_blue"
+    android:background="#efc9ef"
     android:orientation="vertical">
 
     <ListView
@@ -31,7 +31,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="#bf9abf">
 
             <ImageView
                 android:id="@+id/imageViewAlbumArt"

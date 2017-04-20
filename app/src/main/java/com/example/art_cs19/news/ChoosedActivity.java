@@ -1,7 +1,6 @@
 package com.example.art_cs19.news;
 
 
-import android.*;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +24,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -44,28 +45,15 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choosed);
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         isStoragePermissionGranted();
-
-
-        tts = new TextToSpeech(this, this, "com.google.android.tts");
-
-        news = (ImageView) findViewById(R.id.news);
-        music = (ImageView) findViewById(R.id.music);
-        utilities = (ImageView) findViewById(R.id.utilities);
-        news = (ImageView) findViewById(R.id.news);
-        radio = (ImageView) findViewById(R.id.radio);
-        audioBook = (ImageView) findViewById(R.id.audioBook);
-        call = (ImageView) findViewById(R.id.call);
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        findview();
 
         news.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 news.setImageResource(R.drawable.newspressed);
                 isOnlineNews();
+                tts.speak("คุณกำลังอยู่ในหน้าข่าว กรุณาเลือกรายการ หรือกดปุ่มลดเสียงเพื่อฟังรายการ", TextToSpeech.QUEUE_FLUSH, null, "");
             }
         });
 
@@ -74,6 +62,7 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
             public void onClick(View v) {
                 radio.setImageResource(R.drawable.radio);
                 isOnlineRadio();
+                tts.speak("คุณกำลังอยู่ในหน้าวิทยุ กรุณาเลือกรายการ หรือกดปุ่มลดเสียงเพื่อฟังรายการ", TextToSpeech.QUEUE_FLUSH, null, "");
 
             }
         });
@@ -84,6 +73,7 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
                 music.setImageResource(R.drawable.musicpressed);
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
+                tts.speak("คุณกำลังอยู่ในหน้าเพลง กรุณาเลือกรายการ", TextToSpeech.QUEUE_FLUSH, null, "");
                 finish();
             }
         });
@@ -93,12 +83,15 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
             public void onClick(View v) {
                 audioBook.setImageResource(R.drawable.audiobookpressed);
                 isOnlineAudioBook();
+                tts.speak("คุณกำลังอยู่ในหน้าหนังสือเสียง กรุณาเลือกรายการหนังสือ หรือกดปุ่มลดเสียงเพื่อฟังรายการ", TextToSpeech.QUEUE_FLUSH, null, "");
             }
         });
         utilities.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 utilities.setImageResource(R.drawable.utilitiespressed);
+                startActivity(new Intent(ChoosedActivity.this,UtilitiesActivity.class));
+
             }
         });
 
@@ -106,9 +99,23 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
             @Override
             public void onClick(View v) {
                 call.setImageResource(R.drawable.callpressed);
+                tts.speak("คุณกำลังอยู่ในหน้าโทรฉุกเฉิน กรุณาเลือกรายการเพื่อโทร", TextToSpeech.QUEUE_FLUSH, null, "");
             }
         });
 
+    }
+
+    private void findview() {
+        tts = new TextToSpeech(this, this, "com.google.android.tts");
+        news = (ImageView) findViewById(R.id.news);
+        music = (ImageView) findViewById(R.id.music);
+        utilities = (ImageView) findViewById(R.id.utilities);
+        news = (ImageView) findViewById(R.id.news);
+        radio = (ImageView) findViewById(R.id.radio);
+        audioBook = (ImageView) findViewById(R.id.audioBook);
+        call = (ImageView) findViewById(R.id.call);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
     }
 
@@ -125,11 +132,6 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
 
                 }
                 return true;
-            case KeyEvent.KEYCODE_VOLUME_DOWN:
-                if (action == KeyEvent.ACTION_DOWN) {
-
-                }
-                return true;
             default:
                 return super.dispatchKeyEvent(event);
         }
@@ -140,8 +142,9 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "เทสๆ");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "คำสั่งเสียง");
         startActivityForResult(intent, REQUEST_SPEECH);
+
 
     }
 
@@ -152,49 +155,37 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
             if (resultCode == RESULT_OK) {
                 ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-
                 if (matches.size() == 0) {
-
 
                 } else {
                     //คำสั่งเสียง
                     String mostLikelyThingHeard = matches.get(0);
                     if (mostLikelyThingHeard.toUpperCase().equals("วิทยุ")) {
-
+                        isOnlineRadio();
+                        tts.speak("คุณกำลังอยู่ในหน้าวิทยุ กรุณาเลือกรายการ หรือกดปุ่มลดเสียงเพื่อฟังรายการ", TextToSpeech.QUEUE_FLUSH, null, "");
 
                     } else if (mostLikelyThingHeard.toUpperCase().equals("ข่าว")) {
-
+                        isOnlineNews();
+                        tts.speak("คุณกำลังอยู่ในหน้าข่าว กรุณาเลือกรายการ หรือกดปุ่มลดเสียงเพื่อฟังรายการ", TextToSpeech.QUEUE_FLUSH, null, "");
 
                     } else if (mostLikelyThingHeard.toUpperCase().equals("เพลง")) {
-                        startActivity(new Intent(this, MainActivity.class));
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
-                    } else if (mostLikelyThingHeard.toUpperCase().equals("UTILITY")) {
+                    } else if (mostLikelyThingHeard.toUpperCase().equals("หนังสือเสียง")) {
+                        isOnlineAudioBook();
+                        tts.speak("คุณกำลังอยู่ในหน้าหนังสือเสียง กรุณาเลือกรายการหนังสือ หรือกดปุ่มลดเสียงเพื่อฟังรายการ", TextToSpeech.QUEUE_FLUSH, null, "");
+                    } else if (mostLikelyThingHeard.toUpperCase().equals("โทร")) {
+                        tts.speak("คุณกำลังอยู่ในหน้าโทรฉุกเฉิน กรุณาเลือกรายการเพื่อโทร", TextToSpeech.QUEUE_FLUSH, null, "");
+
+                    } else if (mostLikelyThingHeard.toUpperCase().equals("อรรถประโยชน์")) {
 
                     }
-
-
                 }
             } else if (resultCode == RESULT_CANCELED) {
-
-
+                tts.speak("ปิดระบบคำสั่งเสียงแล้ว", TextToSpeech.QUEUE_FLUSH, null, "");
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-
-    @Override
-    public void onInit(int status) {
-        if (status == TextToSpeech.SUCCESS) {
-            tts.setLanguage(new Locale("th"));
-        }
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
     }
 
     @Override
@@ -227,6 +218,7 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
             return connected = true;
         } else {
             tts.speak("กรุณาเชื่อมต่ออินเตอร์เน็ต", TextToSpeech.QUEUE_FLUSH, null, "");
+            Toast.makeText(getApplicationContext(), "กรุณาเชื่อมต่ออินเตอร์เน็ตก่อนใช้งาน", Toast.LENGTH_LONG).show();
             return connected = false;
         }
     }
@@ -239,6 +231,7 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
             return connected = true;
         } else {
             tts.speak("กรุณาเชื่อมต่ออินเตอร์เน็ต", TextToSpeech.QUEUE_FLUSH, null, "");
+            Toast.makeText(getApplicationContext(), "กรุณาเชื่อมต่ออินเตอร์เน็ตก่อนใช้งาน", Toast.LENGTH_LONG).show();
             return connected = false;
         }
     }
@@ -251,6 +244,7 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
             return connected = true;
         } else {
             tts.speak("กรุณาเชื่อมต่ออินเตอร์เน็ต", TextToSpeech.QUEUE_FLUSH, null, "");
+            Toast.makeText(getApplicationContext(), "กรุณาเชื่อมต่ออินเตอร์เน็ตก่อนใช้งาน", Toast.LENGTH_LONG).show();
             return connected = false;
         }
     }
@@ -270,6 +264,15 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
             Log.v(TAG, "Permission is granted");
             return true;
         }
+    }
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            tts.setLanguage(new Locale("th"));
+            tts.setSpeechRate((float) 0.8);
+        }
+
     }
 
 }

@@ -61,6 +61,7 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
+        tts.speak("คุณกำลังอยู่ในหน้าข่าวกรุณาเลือกรายการ หรือ กดปุ่มลดเสียงเพื่อฟังรายการข่าว",TextToSpeech.QUEUE_FLUSH,null,"");
 
     }
 
@@ -240,11 +241,7 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
                 } else {
                     //คำสั่งเสียง
                     final String mostLikelyThingHeard = matches.get(0);
-
-
                             Intent singleintent = new Intent(NewsMainActivity.this, SingleActivity.class);
-
-
                             if (mostLikelyThingHeard.toUpperCase().equals("1")) {
                                 singleintent.putExtra("post_key", PageList1);
                                 startActivity(singleintent);
@@ -291,6 +288,7 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
             tts.setLanguage(new Locale("th"));
+            tts.setSpeechRate((float) 0.8);
         }
 
     }

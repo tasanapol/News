@@ -27,19 +27,19 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends Activity {
-	String LOG_CLASS = "MainActivity";
-	CustomAdapter customAdapter = null;
-	static TextView playingSong;
-	Button btnPlayer;
-	static Button btnPause, btnPlay, btnNext, btnPrevious;
-	Button btnStop;
-	LinearLayout mediaLayout;
-	static LinearLayout linearLayoutPlayingSong;
-	ListView mediaListView;
-	ProgressBar progressBar;
-	TextView textBufferDuration, textDuration;
-	static ImageView imageViewAlbumArt;
-	static Context context;
+	private String LOG_CLASS = "MainActivity";
+	private CustomAdapter customAdapter = null;
+	private static TextView playingSong;
+	private Button btnPlayer;
+	private static Button btnPause, btnPlay, btnNext, btnPrevious;
+	private Button btnStop;
+	private LinearLayout mediaLayout;
+	private static LinearLayout linearLayoutPlayingSong;
+	private ListView mediaListView;
+	private ProgressBar progressBar;
+	private TextView textBufferDuration, textDuration;
+	private static ImageView imageViewAlbumArt;
+	private static Context context;
 	private final int REQUEST_SPEECH = 100;
 	
 	@Override

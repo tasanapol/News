@@ -27,7 +27,7 @@ import java.io.IOException;
 public class RadioService extends Service {
 
     private MediaPlayer mediaPlayer;
-    private String Fm;
+    private static String Fm;
     public static boolean isServiceRunning;
 
     @Nullable
@@ -65,6 +65,8 @@ public class RadioService extends Service {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer = null;
+        }else{
+            mediaPlayer.stop();
         }
         isServiceRunning = false;
         super.onDestroy();

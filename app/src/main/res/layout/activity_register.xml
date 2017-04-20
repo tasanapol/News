@@ -32,7 +32,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:hint="username 8-10 character"
+                android:hint="Username 8-10 "
                 android:id="@+id/edtUsername"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
@@ -62,8 +62,9 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
+                android:hint="Password"
                 android:ems="10"
-                android:digits="abcdefghijklmnopqrst012345789"
+                android:digits="abcdefghijklmnopqrst012345789ABCDEFGHIJKLMNOPQRSTUVW"
                 android:inputType="textPassword" />
         </LinearLayout>
 
@@ -87,7 +88,9 @@
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 android:ems="10"
-                android:inputType="textEmailAddress" />
+                android:hint="Email Address"
+                android:inputType="textEmailAddress"
+                android:digits="abcdefghijklmnopqrst012345789@."/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -109,7 +112,8 @@
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 android:ems="10"
-                android:inputType="number" />
+                android:inputType="number"
+                android:hint="Number Telephone"/>
         </LinearLayout>
 
     </LinearLayout>
