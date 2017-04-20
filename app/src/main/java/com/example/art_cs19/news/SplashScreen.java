@@ -71,6 +71,7 @@ public class SplashScreen extends AppCompatActivity implements TextToSpeech.OnIn
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
             tts.setLanguage(new Locale("th"));
+            tts.setSpeechRate((float) 1);
         }
     }
 

@@ -99,6 +99,7 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
             @Override
             public void onClick(View v) {
                 call.setImageResource(R.drawable.callpressed);
+                startActivity(new Intent(ChoosedActivity.this,Call.class));
                 tts.speak("คุณกำลังอยู่ในหน้าโทรฉุกเฉิน กรุณาเลือกรายการเพื่อโทร", TextToSpeech.QUEUE_FLUSH, null, "");
             }
         });
@@ -270,9 +271,19 @@ public class ChoosedActivity extends AppCompatActivity implements TextToSpeech.O
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
             tts.setLanguage(new Locale("th"));
-            tts.setSpeechRate((float) 0.8);
+            tts.setSpeechRate((float) 1.2);
         }
 
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        tts.stop();
+    }
 
+    @Override
+    protected void onDestroy() {
+        tts.stop();
+        super.onDestroy();
+    }
 }

@@ -321,7 +321,7 @@ public class RadioActivity extends AppCompatActivity implements TextToSpeech.OnI
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
             tts.setLanguage(new Locale("th"));
-            tts.setSpeechRate((float) 0.8);
+            tts.setSpeechRate((float) 1);
         }
     }
 

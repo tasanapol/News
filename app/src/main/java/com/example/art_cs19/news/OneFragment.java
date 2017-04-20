@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,15 +28,23 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 
-public class OneFragment extends Fragment{
+import static android.app.Activity.RESULT_OK;
 
-    RecyclerView recyclerAudio1;
+
+public class OneFragment extends Fragment implements TextToSpeech.OnInitListener{
+
+    private RecyclerView recyclerAudio1;
     private Query fDatabase;
-    LinearLayoutManager layoutManager;
+    private LinearLayoutManager layoutManager;
     private View view;
+    private TextToSpeech tts;
     private ProgressDialog progressbar;
     private DatabaseReference mDatabaseUser;
+    private String SoundList1, SoundList2, SoundList3, SoundList4;
+    private String PageList1, PageList2, PageList3, PageList4;
+    private final int REQUEST_SPEECH = 100;
 
 
     public OneFragment() {
@@ -58,6 +69,7 @@ public class OneFragment extends Fragment{
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerAudio1.setHasFixedSize(true);
         recyclerAudio1.setLayoutManager(layoutManager);
+        tts = new TextToSpeech(getActivity(), this, "com.google.android.tts");
         return view;
     }
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -78,6 +90,15 @@ public class OneFragment extends Fragment{
                 viewHolder.setUploader(model.getUploader());
                 viewHolder.setId(model.getId());
                 viewHolder.setImage(getActivity(), model.getImage());
+                SoundList1 = getItem(0).getTitle();
+                SoundList2 = getItem(1).getTitle();
+                SoundList3 = getItem(2).getTitle();
+                SoundList4 = getItem(3).getTitle();
+
+                PageList1 = getRef(0).getKey();
+                PageList2 = getRef(1).getKey();
+                PageList3 = getRef(2).getKey();
+                PageList4 = getRef(3).getKey();
 
 
                 //ส่งค่า putextras post_key ไปหน้า SingleActivity
@@ -98,6 +119,12 @@ public class OneFragment extends Fragment{
 
 
     }
+
+    @Override
+    public void onInit(int status) {
+
+    }
+
     public static class AudioViewHolder extends RecyclerView.ViewHolder {
 
         View fView;
@@ -143,4 +170,53 @@ public class OneFragment extends Fragment{
 
         }
     }
+
+
+
+
+    public void promtspeech() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "เลือกหัวข้อ");
+        startActivityForResult(intent, REQUEST_SPEECH);
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_SPEECH) {
+            if (resultCode == RESULT_OK) {
+                ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+                if (matches.size() == 0) {
+                    try {
+                        promtspeech();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    //คำสั่งเสียง
+                    final String mostLikelyThingHeard = matches.get(0);
+                    Intent singleintent = new Intent(getActivity(), SingleActivity.class);
+                    if (mostLikelyThingHeard.toUpperCase().equals("1")) {
+                        singleintent.putExtra("post_key", PageList1);
+                        startActivity(singleintent);
+                    } else if (mostLikelyThingHeard.toUpperCase().equals("2")) {
+                        singleintent.putExtra("post_key", PageList2);
+                        startActivity(singleintent);
+                    } else if (mostLikelyThingHeard.toUpperCase().equals("3")) {
+                        singleintent.putExtra("post_key", PageList3);
+                        startActivity(singleintent);
+                    } else if (mostLikelyThingHeard.toUpperCase().equals("4")) {
+                        singleintent.putExtra("post_key", PageList4);
+                        startActivity(singleintent);
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
 }
