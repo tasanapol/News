@@ -6,6 +6,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -22,7 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class RadioSingleActivity extends AppCompatActivity {
+public class RadioSingleActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     private ImageView imgShowFm;
     private MediaPlayer mediaPlayer;
@@ -30,12 +31,11 @@ public class RadioSingleActivity extends AppCompatActivity {
     private  boolean started = false;
     private static ImageView play;
     private static ImageView pause;
-
     private String Fm;
-
     private RippleBackground rippleBackground;
-
+    private TextToSpeech tts;
     private final int REQUEST_SPEECH = 100;
+    private Intent intent;
 
 
     @Override
@@ -50,13 +50,10 @@ public class RadioSingleActivity extends AppCompatActivity {
         imgShowFm.setImageResource(image1);
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        final String nameRadio1 = getIntent().getExtras().getString("nameRadio");
         Fm = getIntent().getExtras().getString("myFm");
-
+        tts = new TextToSpeech(this, this, "com.google.android.tts");
         final Intent intent = new Intent(RadioSingleActivity.this, RadioService.class);
         intent.putExtra("Fm", Fm);
-
-
 
         if (RadioService.isServiceRunning == true) {
             rippleBackground.startRippleAnimation();
@@ -71,9 +68,11 @@ public class RadioSingleActivity extends AppCompatActivity {
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent Stopservice = new Intent(RadioSingleActivity.this, RadioService.class);
+                Stopservice.putExtra("Fm", Fm);
+                startService(Stopservice);
                 rippleBackground.startRippleAnimation();
-                startService(intent);
-                started = true;
+                RadioService.isServiceRunning = true;
                 pause.setVisibility(View.VISIBLE);
                 play.setVisibility(View.GONE);
 
@@ -83,9 +82,11 @@ public class RadioSingleActivity extends AppCompatActivity {
         pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent Stopservice = new Intent(RadioSingleActivity.this, RadioService.class);
+                Stopservice.putExtra("Fm", Fm);
+                stopService(Stopservice);
                 rippleBackground.stopRippleAnimation();
-                stopService(intent);
-                started = false;
+                RadioService.isServiceRunning = false;
                 pause.setVisibility(View.GONE);
                 play.setVisibility(View.VISIBLE);
 
@@ -105,14 +106,12 @@ public class RadioSingleActivity extends AppCompatActivity {
             case KeyEvent.KEYCODE_VOLUME_UP:
                 if (action == KeyEvent.ACTION_DOWN) {
                     promtspeech();
-                    final Intent intent = new Intent(RadioSingleActivity.this, RadioService.class);
-                    stopService(intent);
+                    Intent stopservice = new Intent(this,RadioService.class);
+                    stopService(stopservice);
 
-                }
-                return true;
-            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                } case KeyEvent.KEYCODE_VOLUME_DOWN:
                 if (action == KeyEvent.ACTION_DOWN) {
-
+                    speakWords("ใช่คำสั่งเล่น เพื่อเล่นวิทยุ และใช้คำสั่งหยุด เพื่อหยุดวิทยุ");
                 }
                 return true;
             default:
@@ -142,31 +141,29 @@ public class RadioSingleActivity extends AppCompatActivity {
                 } else {
                     //คำสั่งเสียง
                     String mostLikelyThingHeard = matches.get(0);
-
-
                     if (mostLikelyThingHeard.toUpperCase().equals("เล่น")) {
                         Intent intent = new Intent(RadioSingleActivity.this, RadioService.class);
                         final RippleBackground rippleBackground = (RippleBackground) findViewById(R.id.content);
                         Fm = getIntent().getExtras().getString("myFm");
                         intent.putExtra("Fm", Fm);
                         rippleBackground.startRippleAnimation();
+                        RadioService.isServiceRunning = true;
                         startService(intent);
                         pause.setVisibility(View.VISIBLE);
                         play.setVisibility(View.GONE);
-
 
                     } else if (mostLikelyThingHeard.toUpperCase().equals("หยุด")) {
                         Intent intent = new Intent(RadioSingleActivity.this, RadioService.class);
                         final RippleBackground rippleBackground = (RippleBackground) findViewById(R.id.content);
                         Fm = getIntent().getExtras().getString("myFm");
-                        rippleBackground.stopRippleAnimation();
+                        rippleBackground.startRippleAnimation();
                         stopService(intent);
+                        RadioService.isServiceRunning = false;
                         pause.setVisibility(View.GONE);
                         play.setVisibility(View.VISIBLE);
 
-
                     } else if (mostLikelyThingHeard.toUpperCase().equals("เปลี่ยนคลื่น")) {
-                        startActivity(new Intent(RadioSingleActivity.this, RadioActivity.class));
+                        startActivity(new Intent(RadioSingleActivity.this, MainActivity.class));
 
                     }
                 }
@@ -205,21 +202,35 @@ public class RadioSingleActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onStop() {
-        super.onStop();
-
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
     }
 
+
+
+    private void speakWords(String speech) {
+        if (tts != null) {
+            tts.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
+        }
+    }
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            tts.setLanguage(new Locale("th"));
+            tts.setSpeechRate((float) 0.9);
+        }
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
+        if (tts != null)
+        {
+            tts.stop();
+            tts.shutdown();
+        }
+        finish();
 
+    }
 
 }
 

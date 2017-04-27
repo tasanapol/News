@@ -63,6 +63,8 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         tts.speak("คุณกำลังอยู่ในหน้าข่าวกรุณาเลือกรายการ หรือ กดปุ่มลดเสียงเพื่อฟังรายการข่าว",TextToSpeech.QUEUE_FLUSH,null,"");
 
+
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -104,7 +106,6 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
                 PageList9 = getRef(8).getKey();
                 PageList10 = getRef(9).getKey();
 
-
                 viewHolder.setImage(getApplicationContext(), model.getImage());
                 //ส่งค่า putextras post_key ไปหน้า SingleActivity
                 viewHolder.fView.setOnClickListener(new View.OnClickListener() {
@@ -119,8 +120,6 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
 
             }
         };
-
-
         fNewsList.setAdapter(firebaseRecyclerAdapter);
     }
 
@@ -199,7 +198,7 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
                 return true;
             case KeyEvent.KEYCODE_VOLUME_DOWN:
                 if (action == KeyEvent.ACTION_DOWN) {
-                    tts.speak("หัวข้อข่าวหนึ่ง คือ " + SoundList1
+                   speakWords("หัวข้อข่าวหนึ่ง คือ " + SoundList1
                                     + "หัวข้อข่าวสอง คือ" + SoundList2
                                     + "หัวข้อข่าวสาม คือ" + SoundList3
                                     + "หัวข้อข่าวสี่ คือ" + SoundList4
@@ -208,8 +207,7 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
                                     + "หัวข้อข่าวเจ็ด คือ" + SoundList7
                                     + "หัวข้อข่าวแปด คือ" + SoundList8
                                     + "หัวข้อข่าวเก้า คือ" + SoundList9
-                                    + "หัวข้อข่าวสิบ คือ" + SoundList10
-                            , TextToSpeech.QUEUE_FLUSH, null, "");
+                                    + "หัวข้อข่าวสิบ คือ" + SoundList10);
                 }
                 return true;
             default:
@@ -283,12 +281,18 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-
+    private void speakWords(String speech) {
+        if (tts != null) {
+            tts.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
+        }
+    }
     @Override
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
             tts.setLanguage(new Locale("th"));
-            tts.setSpeechRate((float) 0.8);
+            tts.setSpeechRate((float) 0.9);
+            speakWords("ขณะนี้คุณกำลังอยู่ในหน้าข่าว กรุณาเลือกรายการข่าว หรือกดปุ่มลดเสียงเพื่อฟังรายการข่าว ");
+
         }
 
     }
@@ -302,6 +306,13 @@ public class NewsMainActivity extends AppCompatActivity implements TextToSpeech.
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (tts != null)
+        {
+            tts.stop();
+            tts.shutdown();
+        }
+        finish();
 
     }
+
 }

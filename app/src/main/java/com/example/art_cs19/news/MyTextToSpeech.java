@@ -20,6 +20,13 @@ public class MyTextToSpeech extends AppCompatActivity implements TextToSpeech.On
         super.onCreate(savedInstanceState);
         tts = new TextToSpeech(this, this, "com.google.android.tts");
     }
+
+    public MyTextToSpeech(String speech) {
+        // speak straight away
+        if (tts != null) {
+            tts.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
+        }
+    }
     @Override
     public void onInit(int status) {
         if(status == TextToSpeech.SUCCESS) {

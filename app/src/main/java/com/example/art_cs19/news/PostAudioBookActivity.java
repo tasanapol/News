@@ -110,7 +110,6 @@ public class PostAudioBookActivity extends AppCompatActivity {
         findView();
         DateCalender();
 
-
         progressbar = new ProgressDialog(this);
         fStorage = FirebaseStorage.getInstance().getReference();
         fDatabase = FirebaseDatabase.getInstance().getReference().child("Audio");
@@ -120,8 +119,6 @@ public class PostAudioBookActivity extends AppCompatActivity {
         edtDate.setText(DayName + "/" + MonthName + "/" + YearName);
         edtTime.setText(String.valueOf(time));
         tvPostId.setText(String.valueOf(timeSort));
-
-
 
         mAuth = FirebaseAuth.getInstance();
         mAuth2 = FirebaseAuth.getInstance();
@@ -198,7 +195,6 @@ public class PostAudioBookActivity extends AppCompatActivity {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-
                     imgRecord.setVisibility(View.GONE);
                     imgPauseRecord.setVisibility(View.VISIBLE);
                     rotateloading.start();
@@ -234,7 +230,6 @@ public class PostAudioBookActivity extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent, "Choose Picture"), 1);
             }
         });
-
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -286,13 +281,7 @@ public class PostAudioBookActivity extends AppCompatActivity {
         });
 
     }
-
-
-
-
-
-
-   /* public void pauseRecording() throws IOException {
+    /* public void pauseRecording() throws IOException {
         mediaRecorder.stop();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
@@ -300,7 +289,6 @@ public class PostAudioBookActivity extends AppCompatActivity {
         FileOutputStream paused_file = new FileOutputStream(file_path);
         mediaRecorder.setOutputFile(paused_file.getFD());
     }
-
     public void resumeRecording() throws IOException {
         mediaRecorder.prepare();
         mediaRecorder.start();
@@ -636,11 +624,8 @@ public class PostAudioBookActivity extends AppCompatActivity {
                 initialDayofWeekName = "ศ.";
                 break;
         }
-
-
     }
     ///////////////////////////////////////////////////////////////////////
-
     public void MediaRecorderReady() {
 
         mediaRecorder = new MediaRecorder();
@@ -656,20 +641,15 @@ public class PostAudioBookActivity extends AppCompatActivity {
     }
 
     public String CreateRandomAudioFileName(int string) {
-
         StringBuilder stringBuilder = new StringBuilder(string);
-
         int i = 0;
         while (i < string) {
-
             stringBuilder.append(RandomAudioFileName.charAt(random.nextInt(RandomAudioFileName.length())));
-
             i++;
         }
         return stringBuilder.toString();
-
     }
-
+///////////////////////// Permisison Zone///////////////////////////////////////////////////////////////////////
     private void requestPermission() {
         ActivityCompat.requestPermissions(this,
                 new String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO},
@@ -700,17 +680,11 @@ public class PostAudioBookActivity extends AppCompatActivity {
     }
 
     public boolean checkPermission() {
-
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
         int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
-
         return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
     }
-
-    private void checkUserExist() {
-
-    }
-
+///////////////////////// Permisison Zone///////////////////////////////////////////////////////////////////////
     @Override
     protected void onStart() {
         super.onStart();

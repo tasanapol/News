@@ -59,13 +59,11 @@ public class SingleActivity extends AppCompatActivity implements TextToSpeech.On
         setContentView(R.layout.activity_single);
 
         tts = new TextToSpeech(this, this, "com.google.android.tts");
-
         fShowSingleDescription = (TextView) findViewById(R.id.tvShowDescription);
         fShowSingleTitle = (TextView) findViewById(R.id.tvShowTitle);
         fShowSingleImage = (ImageView) findViewById(R.id.imgShowUpload);
         fShowSingleDate = (TextView) findViewById(R.id.tvShowDate);
         fShowSingleTime = (TextView) findViewById(R.id.tvShowTime);
-        btnRead = (CircleButton) findViewById(R.id.btnRead);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -105,15 +103,6 @@ public class SingleActivity extends AppCompatActivity implements TextToSpeech.On
 
         fDatabase = FirebaseDatabase.getInstance().getReference("News");
         mPost_key = getIntent().getExtras().getString("post_key");
-
-
-        btnRead.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tts.speak("หัวข้อข่าว" + post_title + "ประจำวัน" + DayOfWeekName+ "ที่" + post_date + "คือ" + post_description
-                        , TextToSpeech.QUEUE_FLUSH, null, "");
-            }
-        });
 
 
         fDatabase.child(mPost_key).addValueEventListener(new ValueEventListener() {
@@ -219,5 +208,14 @@ public void promtspeech() {
         tts.stop();
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (tts != null)
+        {
+            tts.stop();
+            tts.shutdown();
+        }
+        finish();
+    }
 }

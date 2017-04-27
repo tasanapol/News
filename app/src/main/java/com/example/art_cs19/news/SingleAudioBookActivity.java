@@ -11,9 +11,12 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PersistableBundle;
+import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class SingleAudioBookActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener, MediaPlayer.OnBufferingUpdateListener {
@@ -47,7 +51,7 @@ public class SingleAudioBookActivity extends AppCompatActivity implements MediaP
     private String post_audio;
     private String post_date;
     private String post_time;
-    private String audio;
+    private String audio, audio2;
     private TextView tvBuffer, tvDuration;
     private MediaPlayer mediaPlayer;
     private SeekBar seekBar;
@@ -57,7 +61,8 @@ public class SingleAudioBookActivity extends AppCompatActivity implements MediaP
     private int playPositionInMillisecconds;
     private int length;
     private int newLength;
-    BackgroundSound mBackgroundSound;
+    private BackgroundSound mBackgroundSound;
+    private int REQUEST_SPEECH = 1;
     private boolean isPlaying = false;
 
     @Override
@@ -68,15 +73,11 @@ public class SingleAudioBookActivity extends AppCompatActivity implements MediaP
         setView();
         setClick();
 
-        mBackgroundSound = new BackgroundSound();
-        if(mBackgroundSound.getStatus() == AsyncTask.Status.RUNNING){
-            // My AsyncTask is currently doing work in doInBackground()
-            tvAudio.setText("KK");
-        }
-
-        if(mediaPlayer.isPlaying()){
-            tvAudio.setText("Cahcah");
-        }
+       if(isPlaying == true){
+           tvAudio.setText("not null");
+       }else {
+           tvAudio.setText("null");
+       }
     }
 
     private void setClick() {
@@ -201,7 +202,6 @@ public class SingleAudioBookActivity extends AppCompatActivity implements MediaP
         btnPause = (Button) findViewById(R.id.btnPause);
         btnStop = (Button) findViewById(R.id.btnStop);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
-
         handler = new Handler();
         //เล่นพร้อม seekbar
         mediaPlayer = new MediaPlayer();
@@ -231,6 +231,97 @@ public class SingleAudioBookActivity extends AppCompatActivity implements MediaP
         }
         return time;
     }
+
+
+    public class BackgroundSound extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            mediaPlayer.setVolume(1.0f, 1.0f);
+            mediaPlayer.start();
+            mediaPlayer.isPlaying();
+            isPlaying = true;
+            return null;
+        }
+
+    }
+/////////////speech prompt Zone /////////////////////////////////
+
+    public void promtspeech() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "เลือกหัวข้อ");
+
+        startActivityForResult(intent, REQUEST_SPEECH);
+    }
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int action = event.getAction();
+        int keyCode = event.getKeyCode();
+        //กด
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                if (action == KeyEvent.ACTION_DOWN) {
+                    mediaPlayer.pause();
+                    promtspeech();
+                }
+                return true;
+            default:
+                return super.dispatchKeyEvent(event);
+        }
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == REQUEST_SPEECH) {
+            if (resultCode == RESULT_OK) {
+                ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+                if (matches.size() == 0) {
+                    try {
+                        promtspeech();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    //คำสั่งเสียง
+                    final String mostLikelyThingHeard = matches.get(0);
+
+                    if (mostLikelyThingHeard.toUpperCase().equals("เล่น")) {
+                        try {
+                            mediaPlayer.setDataSource(post_audio); // setup song from http://www.hrupin.com/wp-content/uploads/mp3/testsong_20_sec.mp3 URL to mediaplayer data source
+                            mediaPlayer.prepare(); // you must call this method after setup the datasource in setDataSource method. After calling prepare() the instance of MediaPlayer starts load data from URL to internal buffer.
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        mediaFileLengthInMilliseconds = mediaPlayer.getDuration();
+                        mediaPlayer.start();
+                        btnPlay.setVisibility(View.GONE);
+                        btnPause.setVisibility(View.VISIBLE);
+                        //seekBar.setProgress((mediaPlayer.getCurrentPosition()*100) / mediaPlayer.getDuration());
+                        primarySeekBarProgressUpdater();
+                        tvAudio.setText("KK");
+
+                    } else if (mostLikelyThingHeard.toUpperCase().equals("พัก")) {
+                        mediaPlayer.pause();
+                        btnPause.setVisibility(View.GONE);
+                        btnPlay.setVisibility(View.VISIBLE);
+                        mediaPlayer.pause();
+                        length = mediaPlayer.getCurrentPosition();
+
+                    } else if (mostLikelyThingHeard.toUpperCase().equals("หยุด")) {
+                      mediaPlayer.stop();
+                    } else if (mostLikelyThingHeard.toUpperCase().equals("ขยับ5นาที")) {
+                        length = mediaPlayer.getCurrentPosition() + 5;
+                        mediaPlayer.seekTo(length);
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+/////////////speech prompt Zone /////////////////////////////////
 
     @Override
     protected void onResume() {
@@ -273,19 +364,5 @@ public class SingleAudioBookActivity extends AppCompatActivity implements MediaP
         length = mediaPlayer.getCurrentPosition();
         mBackgroundSound.cancel(true);
     }
-
-    public class BackgroundSound extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            mediaPlayer.setVolume(1.0f, 1.0f);
-            mediaPlayer.start();
-            mediaPlayer.isPlaying();
-            isPlaying = true;
-            return null;
-        }
-
-    }
-
-
 }
 

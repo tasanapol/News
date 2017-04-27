@@ -28,10 +28,8 @@ public class SplashScreen extends AppCompatActivity implements TextToSpeech.OnIn
         tts = new TextToSpeech(this, this, "com.google.android.tts");
         //ไม่แสดง action Bar
         setContentView(R.layout.activity_splash_screen);
-
         //ไม่แสดง status Bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         //สร้าง Handler ออบเจ็กต์ เพื่อใช้ควบคุมการทำงาน
         handler = new Handler();
         //สร้าง Thread เพื่อกำหนดการเปิดหน้าจอแบบ Splashscreen
@@ -40,14 +38,15 @@ public class SplashScreen extends AppCompatActivity implements TextToSpeech.OnIn
             public void run() {
                 Intent intent = new Intent(SplashScreen.this, ChoosedActivity.class);
                 startActivity(intent);
-                tts.speak("คุณกำลังอยู่ในหน้าเมนู กรุณาเลือกรายการ", TextToSpeech.QUEUE_FLUSH, null, "");
 
             }
         };
-        //สร้างเสียงใน splashscreen
-        //MediaPlayer mp = MediaPlayer.create(getBaseContext(), R.raw.splashsound);
-        //mp.start();
 
+    }
+    private void speakWords(String speech) {
+        if (tts != null) {
+            tts.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
+        }
     }
 
     @Override
@@ -72,11 +71,13 @@ public class SplashScreen extends AppCompatActivity implements TextToSpeech.OnIn
         if (status == TextToSpeech.SUCCESS) {
             tts.setLanguage(new Locale("th"));
             tts.setSpeechRate((float) 1);
+            speakWords("ยินดีต้อนรับสู่ แลนเทิน โปรเจกต์");
         }
     }
 
     @Override
     protected void onDestroy() {
+        tts.stop();
         super.onDestroy();
     }
 }

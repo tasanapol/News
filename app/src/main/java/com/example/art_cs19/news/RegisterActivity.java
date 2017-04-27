@@ -23,7 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText edtUsername, edtPassword, edtEmail, edtTelephone;
+    private EditText edtUsername, edtPassword, edtEmail, edtTelephone, edtComfirmPassword;
     private Button btnSignUp;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -38,7 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
         edtPassword = (EditText) findViewById(R.id.edtPassword);
         edtEmail = (EditText) findViewById(R.id.edtEmail);
         edtTelephone = (EditText) findViewById(R.id.edtTelephone);
-
+        edtComfirmPassword = (EditText)findViewById(R.id.edtConfirmPassword);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
 
         mAuth = FirebaseAuth.getInstance();
@@ -70,13 +70,22 @@ public class RegisterActivity extends AppCompatActivity {
                         .setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                        edtPassword.requestFocus();
+                                edtPassword.requestFocus();
                             }
                         })
                         .setNegativeButton(null, null).show();
-
+            }else if(!edtComfirmPassword.getText().toString().equals(edtPassword.getText().toString())){
+                new AlertDialog.Builder(RegisterActivity.this)
+                        .setTitle("กรอกข้อมูลผิดพลาด")
+                        .setMessage("กรุณากรอกรหัสผ่านให้ตรงกับคอนเฟิร์มรหัสผ่าน")
+                        .setPositiveButton("ใช่", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                edtPassword.requestFocus();
+                            }
+                        })
+                        .setNegativeButton(null, null).show();
             } else {
-
                 mProgress.setMessage("กำลังบันทึก...");
                 mProgress.show();
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {

@@ -41,7 +41,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UtilitiesActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
     private String time, date, MonthName, DayName, YearName, DayOfWeekName, initialDayofWeekName;
     private int batLevel, DayOfWeek;
-    private TextView showTime, showDate, showBattery, showWeather, showCondition, showLocation;
+    private TextView showTime, showDate, showBattery, showWeather, showCondition, showLocation, feeltemp;
     private GoogleApiClient mGoogleApiClient;
     private TextToSpeech tts;
     private final int REQUEST_SPEECH = 100;
@@ -70,7 +70,6 @@ public class UtilitiesActivity extends AppCompatActivity implements TextToSpeech
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         } else {
-
         }
     }
 
@@ -85,7 +84,6 @@ public class UtilitiesActivity extends AppCompatActivity implements TextToSpeech
                     @Override
                     public void onResult(@NonNull WeatherResult weatherResult) {
                         if (!weatherResult.getStatus().isSuccess()) {
-                            Toast.makeText(getApplicationContext(), "Weather: หาไม่เจอ", Toast.LENGTH_LONG).show();
                             showWeather.setText("Weather : หาไม่เจอ");
                             return;
                         }
@@ -119,6 +117,9 @@ public class UtilitiesActivity extends AppCompatActivity implements TextToSpeech
                         }
                     }
                 });
+
+
+
     }
 
     @Override
@@ -136,7 +137,11 @@ public class UtilitiesActivity extends AppCompatActivity implements TextToSpeech
                 return true;
             case KeyEvent.KEYCODE_VOLUME_DOWN:
                 if (action == KeyEvent.ACTION_DOWN) {
-
+                    speakWords("รายการในหน้าอรรถประโยชน์" +
+                            "1 เวลา" +
+                            "2 อุณะหะภูมิ" +
+                            "3 แบตเตอรี่" +
+                            "4 สถานที่");
                 }
                 return true;
             default:
@@ -168,13 +173,13 @@ public class UtilitiesActivity extends AppCompatActivity implements TextToSpeech
                     String mostLikelyThingHeard = matches.get(0);
 
                     if (mostLikelyThingHeard.toUpperCase().equals("เวลา")) {
-                        tts.speak("วัน " + DayOfWeekName + "  ที่" + DayName + "  เดือน " + MonthName + "ปี" + YearName + "ขณะนี้เวลา " + time + "นาฬิกา", TextToSpeech.QUEUE_FLUSH, null, "");
+                        speakWords("วัน " + DayOfWeekName + "  ที่" + DayName + "  เดือน " + MonthName + "ปี" + YearName + "ขณะนี้เวลา " + time + "นาฬิกา");
 
                     } else if (mostLikelyThingHeard.toUpperCase().equals("อุณหภูมิ")) {
-                        tts.speak("ขณะนี้อุณหภูมิ" + Temp + "องศาเซลเซียส", TextToSpeech.QUEUE_FLUSH, null, "");
+                        speakWords("ขณะนี้อุณหภูมิ" + Temp + "องศาเซลเซียส");
 
                     } else if (mostLikelyThingHeard.toUpperCase().equals("แบตเตอรี่")) {
-                        tts.speak("ปริมาณแบตเตอรี่คือ " + batLevel + "เปอร์เซ็นต์", TextToSpeech.QUEUE_FLUSH, null, "");
+                        speakWords("ปริมาณแบตเตอรี่คือ " + batLevel + "เปอร์เซ็นต์");
 
 
                     } else if (mostLikelyThingHeard.toUpperCase().equals("สถานที่")) {
@@ -196,10 +201,10 @@ public class UtilitiesActivity extends AppCompatActivity implements TextToSpeech
                                             for (int i = 0; i < 1 && i < placeLikelihoodList.size(); i++) {
                                                 PlaceLikelihood p = placeLikelihoodList.get(i);
                                                 showLocation.setText(p.getPlace().getName().toString());
-                                                tts.speak("คุณกำลังอยู่บริเวณ" + p.getPlace().getName().toString(), TextToSpeech.QUEUE_FLUSH, null, "");
+                                                speakWords("คุณกำลังอยู่บริเวณ" + p.getPlace().getName().toString());
                                             }
                                         } else {
-                                            showLocation.setText("สถานที่ว่างเปล่า");
+                                            showLocation.setText("สถานที่ว่างเปล่า กรุณาเปิด GPS");
                                         }
                                     }
                                 });
@@ -221,6 +226,7 @@ public class UtilitiesActivity extends AppCompatActivity implements TextToSpeech
         showWeather = (TextView) findViewById(R.id.showWeather);
         showCondition = (TextView) findViewById(R.id.showCondition);
         showLocation = (TextView) findViewById(R.id.showLocation);
+        feeltemp = (TextView) findViewById(R.id.feeltemp);
         tts = new TextToSpeech(this, this, "com.google.android.tts");
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -281,13 +287,34 @@ public class UtilitiesActivity extends AppCompatActivity implements TextToSpeech
         }
     }
 
+    private void speakWords(String speech) {
+        if (tts != null) {
+            tts.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
+        }
+    }
+
     @Override
     public void onInit(int status) {
-
+        if (status == TextToSpeech.SUCCESS) {
+            tts.setLanguage(new Locale("th"));
+            tts.setSpeechRate((float) 1);
+            speakWords("ขณะนี้คุณกำลังอยู่ในหน้าอรรถประโยชน์ กรุณาเลือกรายการ หรือกดปุ่มลดเสียงเพื่อฟังรายการ");
+        }
     }
+
     @Override
     protected void onPause() {
         super.onPause();
         tts.stop();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (tts != null)
+        {
+            tts.stop();
+            tts.shutdown();
+        }
+        finish();
     }
 }

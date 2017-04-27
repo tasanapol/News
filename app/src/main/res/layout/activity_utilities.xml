@@ -17,7 +17,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="#4959b6"
         app:titleTextColor="#FFFFFF"
         android:title="อรรถประโยชน์"
@@ -135,11 +135,12 @@
                         <TableRow>
 
                             <TextView
+                                android:id="@+id/feeltemp"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="0"
+                                android:text="♥"
                                 android:textSize="20sp" />
 
                         </TableRow>
@@ -151,7 +152,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="UNREAD SMS" />
+                                android:text="" />
 
                         </TableRow>
                     </TableLayout>
@@ -175,7 +176,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="48"
+                                android:text="☺"
                                 android:textSize="20sp" />
 
                         </TableRow>
@@ -187,7 +188,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="GMAIL INBOX" />
+                                android:text="" />
 
                         </TableRow>
                     </TableLayout>

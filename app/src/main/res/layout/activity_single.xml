@@ -11,8 +11,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_marginBottom="5dp"
+        android:layout_height="wrap_content"
         android:background="#4959b6"
         app:layout_scrollFlags="scroll|enterAlways"
         app:titleTextColor="#FFFFFF"
@@ -27,7 +26,6 @@
         android:layout_marginTop="0dp"
         android:adjustViewBounds="true"
         android:background="#FFFFFF"
-        android:padding="10dp"
         android:scaleType="centerCrop"
         android:src="@drawable/add_btn" />
 
@@ -44,7 +42,6 @@
             android:id="@+id/tvShowDate"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:layout_weight="2"
             android:background="@color/cardview_dark_background"
             android:gravity="right"
@@ -57,7 +54,6 @@
             android:id="@+id/tvShowTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
             android:background="@color/cardview_dark_background"
             android:gravity="right"
             android:paddingRight="20dp"
@@ -65,17 +61,6 @@
             android:textColor="@color/cardview_light_background"
             android:textSize="10dp" />
     </LinearLayout>
-    <at.markushi.ui.CircleButton
-        android:id="@+id/btnRead"
-        android:layout_width="50dip"
-        android:layout_height="64dip"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="15dp"
-        android:src="@drawable/ic_volume30"
-        app:cb_color="@color/fbutton_color_midnight_blue"
-        app:cb_pressedRingWidth="8dip"
-        android:layout_gravity="right" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -86,7 +71,8 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/btnRead"
             android:layout_centerVertical="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginRight="20dp">
 
             <TextView
                 android:id="@+id/tvShowTitle"

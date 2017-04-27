@@ -2,10 +2,15 @@ package com.example.art_cs19.news;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +18,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -90,7 +96,8 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //เรียกเมทธอดstartPosting มาแสดงในปุ่ม Submit
-                startPosting();
+                isOnlinePost();
+
 
             }
         });
@@ -239,8 +246,25 @@ public class PostActivity extends AppCompatActivity {
                 initialDayofWeekName = "ศ.";
                 break;
         }
+    }
+    public boolean isOnlinePost() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED || connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            startPosting();
+            finish();
 
 
+        } else {
+            new AlertDialog.Builder(this).setTitle("กรุณาเชื่อมต่ออินเตอร์เน็ต")
+                    .setMessage("กรุณาเชื่อมต่ออินเตอร์เน็ตเพื่อทำการโพสต์ข่าว")
+                    .setPositiveButton("เชื่อมต่อ", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                        }
+                    }).setNegativeButton("ไม่", null).show();
+        }
+        return false;
     }
 
 }

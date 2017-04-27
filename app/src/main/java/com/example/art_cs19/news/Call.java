@@ -179,10 +179,17 @@ public class Call extends AppCompatActivity implements TextToSpeech.OnInitListen
 
     }
 
+    private void speakWords(String speech) {
+        if (tts != null) {
+            tts.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
+        }
+    }
 
     public void onInit(int i) {
         if (i == TextToSpeech.SUCCESS) {
             tts.setLanguage(new Locale("th"));
+            tts.setSpeechRate((float) 1.0);
+            speakWords("ขณะนี้คุณกำลังอยู่ในหน้าโทร กรุณาใช้คำสั่งเสียงเพื่อโทรออก");
 
         }
     }
@@ -329,6 +336,16 @@ public class Call extends AppCompatActivity implements TextToSpeech.OnInitListen
                     tts.speak("โทร", TextToSpeech.QUEUE_FLUSH, null, "");
                 }
             }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (tts != null)
+        {
+            tts.stop();
+            tts.shutdown();
         }
     }
 }

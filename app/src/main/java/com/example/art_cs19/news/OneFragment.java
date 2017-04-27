@@ -29,11 +29,12 @@ import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
 
-public class OneFragment extends Fragment implements TextToSpeech.OnInitListener{
+public class OneFragment extends Fragment implements TextToSpeech.OnInitListener {
 
     private RecyclerView recyclerAudio1;
     private Query fDatabase;
@@ -42,23 +43,27 @@ public class OneFragment extends Fragment implements TextToSpeech.OnInitListener
     private TextToSpeech tts;
     private ProgressDialog progressbar;
     private DatabaseReference mDatabaseUser;
-    private String SoundList1, SoundList2, SoundList3, SoundList4;
-    private String PageList1, PageList2, PageList3, PageList4;
+    public static String SoundList1;
+    public static String SoundList2;
+    public static String SoundList3;
+    public static String SoundList4;
+    public static String PageList1;
+    public static String PageList2;
+    public static String PageList3;
+    public static String PageList4;
+    public static String AudioList1;
+    public static String AudioList2;
+    public static String AudioList3;
+    public static String AudioList4;
     private final int REQUEST_SPEECH = 100;
 
 
     public OneFragment() {
         // Required empty public constructor
     }
-
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,6 +77,7 @@ public class OneFragment extends Fragment implements TextToSpeech.OnInitListener
         tts = new TextToSpeech(getActivity(), this, "com.google.android.tts");
         return view;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onStart() {
@@ -90,6 +96,7 @@ public class OneFragment extends Fragment implements TextToSpeech.OnInitListener
                 viewHolder.setUploader(model.getUploader());
                 viewHolder.setId(model.getId());
                 viewHolder.setImage(getActivity(), model.getImage());
+
                 SoundList1 = getItem(0).getTitle();
                 SoundList2 = getItem(1).getTitle();
                 SoundList3 = getItem(2).getTitle();
@@ -100,6 +107,11 @@ public class OneFragment extends Fragment implements TextToSpeech.OnInitListener
                 PageList3 = getRef(2).getKey();
                 PageList4 = getRef(3).getKey();
 
+                AudioList1 = getItem(0).getAudio();
+                AudioList1 = getItem(1).getAudio();
+                AudioList1 = getItem(2).getAudio();
+                AudioList1 = getItem(3).getAudio();
+
 
                 //ส่งค่า putextras post_key ไปหน้า SingleActivity
                 viewHolder.fView.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +119,7 @@ public class OneFragment extends Fragment implements TextToSpeech.OnInitListener
                     public void onClick(View v) {
                         Intent singleintent = new Intent(getActivity(), SingleAudioBookActivity.class);
                         singleintent.putExtra("post_key", post_key);
-                        singleintent.putExtra("audio" , model.getAudio());
+                        singleintent.putExtra("audio", model.getAudio());
                         startActivity(singleintent);
                     }
                 });
@@ -144,6 +156,7 @@ public class OneFragment extends Fragment implements TextToSpeech.OnInitListener
             TextView tvAudio = (TextView) fView.findViewById(R.id.tvAudio);
             tvAudio.setText(audio);
         }
+
         public void setDate(String date) {
             TextView tvDate = (TextView) fView.findViewById(R.id.tvDate);
             tvDate.setText(date);
@@ -159,6 +172,7 @@ public class OneFragment extends Fragment implements TextToSpeech.OnInitListener
             TextView tvUploader = (TextView) fView.findViewById(R.id.tvUploader);
             tvUploader.setText(uploader);
         }
+
         public void setId(String id) {
             TextView tvId = (TextView) fView.findViewById(R.id.tvId);
             tvId.setText(id);
@@ -171,52 +185,6 @@ public class OneFragment extends Fragment implements TextToSpeech.OnInitListener
         }
     }
 
-
-
-
-    public void promtspeech() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "เลือกหัวข้อ");
-        startActivityForResult(intent, REQUEST_SPEECH);
-
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SPEECH) {
-            if (resultCode == RESULT_OK) {
-                ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-
-                if (matches.size() == 0) {
-                    try {
-                        promtspeech();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    //คำสั่งเสียง
-                    final String mostLikelyThingHeard = matches.get(0);
-                    Intent singleintent = new Intent(getActivity(), SingleActivity.class);
-                    if (mostLikelyThingHeard.toUpperCase().equals("1")) {
-                        singleintent.putExtra("post_key", PageList1);
-                        startActivity(singleintent);
-                    } else if (mostLikelyThingHeard.toUpperCase().equals("2")) {
-                        singleintent.putExtra("post_key", PageList2);
-                        startActivity(singleintent);
-                    } else if (mostLikelyThingHeard.toUpperCase().equals("3")) {
-                        singleintent.putExtra("post_key", PageList3);
-                        startActivity(singleintent);
-                    } else if (mostLikelyThingHeard.toUpperCase().equals("4")) {
-                        singleintent.putExtra("post_key", PageList4);
-                        startActivity(singleintent);
-                    }
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
 
 }
